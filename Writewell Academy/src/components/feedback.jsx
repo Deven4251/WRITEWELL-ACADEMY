@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import axios from "../api/axios";
+import axios from "axios";
 import { motion } from "framer-motion";
 import colors from "../theme/colors";
 import { MessageSquare } from "lucide-react";
 import Confetti from "../utils/confetti";
 
 const PAGE_SIZE = 6;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const FeedbackList = () => {
     const [list, setList] = useState([]);
@@ -56,7 +57,7 @@ const FeedbackList = () => {
     --------------------------- */
     const fetchFeedback = async () => {
         try {
-            const res = await axios.get("/api/feedback");
+            const res = await axios.get(`${API_BASE_URL}/api/feedback`);
             let data = res.data.feedback || [];
 
             data = data.sort(
@@ -92,7 +93,7 @@ const FeedbackList = () => {
         const previous = getUserReaction(id);
         if (previous === type) return;
 
-        // optimistic update
+        // optimistic update - list
         setList((prev) =>
             prev.map((fb) => {
                 if (fb._id !== id) return fb;
@@ -107,6 +108,7 @@ const FeedbackList = () => {
             })
         );
 
+        // optimistic update - visible
         setVisible((prev) =>
             prev.map((fb) => {
                 if (fb._id !== id) return fb;
@@ -126,7 +128,10 @@ const FeedbackList = () => {
         if (type === "love") blast();
 
         try {
-            await axios.post(`/api/feedback/react/${id}`, { type, previous });
+            await axios.post(`${API_BASE_URL}/api/feedback/react/${id}`, {
+                type,
+                previous,
+            });
         } catch (err) {
             console.error("Reaction error:", err);
         }
@@ -217,7 +222,9 @@ const FeedbackList = () => {
 
                             {/* Content */}
                             <div style={{ flex: 1 }}>
-                                <strong style={{ fontSize: "1.05rem", color: colors.textDark }}>
+                                <strong
+                                    style={{ fontSize: "1.05rem", color: colors.textDark }}
+                                >
                                     {fb.name}
                                 </strong>
 

@@ -105,24 +105,34 @@ const Insights = () => {
     setFbName("");
     setFbMessage("");
 
+    const form = {
+      name: temp.name,
+      message: temp.message,
+    };
+
     try {
-      const res = await api.post("/api/feedback", {
-        name: temp.name,
-        message: temp.message,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/feedback`,
+        form
+      );
+
       const saved = res.data.feedback || res.data || null;
+
       if (saved && saved._id) {
-        setFeedbackList((s) => s.map((f) => (f._id === temp._id ? saved : f)));
+        setFeedbackList((s) =>
+          s.map((f) => (f._id === temp._id ? saved : f))
+        );
       } else {
         loadFeedback();
       }
     } catch (err) {
-      console.error("❌ Feedback submit failed:", err);
+      console.error("❌ Inquiry submit failed:", err);
       setFeedbackList((s) => s.filter((f) => f._id !== temp._id));
     } finally {
       setSubmitting(false);
     }
   };
+
 
   const getUserReactions = () => {
     try {
