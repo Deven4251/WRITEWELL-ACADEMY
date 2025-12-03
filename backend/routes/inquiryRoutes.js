@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { handleInquiry } = require("../controllers/inquiryController");
+const { handleInquiry } = require("../controllers/InquiryController");
 
 router.post("/", handleInquiry);
 
