@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
@@ -6,9 +7,9 @@ import { motion } from "framer-motion";
 import colors from "../theme/colors";
 import { MessageSquare } from "lucide-react";
 import Confetti from "../utils/confetti";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const PAGE_SIZE = 6;
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const FeedbackList = () => {
     const [list, setList] = useState([]);

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
 import Header from "../components/Header";
@@ -11,33 +12,33 @@ import { getThemeColors } from "../theme/colors";
 import Confetti from "../utils/confetti";
 import "./insights.css";
 
-const BASE_URL = "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const galleryItems = [
   {
-    before: "/images/img1 .jpg",
-    after: "images/img2.jpg",
+    before: "../images/img1 .jpg",
+    after: "../images/img2.jpg",
     title: "Grade 5 Improvement",
     description: "Remarkable progress in letter formation and spacing",
   },
   {
-    before: "images/img3.jpg",
-    after: "images/img5.jpg",
+    before: "../images/img3.jpg",
+    after: "../images/img5.jpg",
     title: "Grade 7 Transformation",
     description:
       "Consistent handwriting style achieved through dedicated practice",
   },
   {
-    before: "images/tanya.jpg",
-    after: "images/tanya2.jpg",
+    before: "../images/tanya.jpg",
+    after: "../images/tanya2.jpg",
     title: "Grade 9 Transformation",
     description: "Improved speed and clarity for better exam performance",
   },
   {
     before:
-      "images/aniket 3rd.jpg",
+      "../images/aniket 3rd.jpg",
     after:
-      "images/img 6 after.jpg",
+      "../images/img 6 after.jpg",
     title: "Grade 11 Transformation",
     description: "Professional handwriting ready for competitive exams",
   },
@@ -64,7 +65,7 @@ const Insights = () => {
   const [loading, setLoading] = useState(true);
   const mounted = useRef(true);
 
-  const api = axios.create({ baseURL: BASE_URL });
+  const api = axios.create({ baseURL: API_BASE_URL });
 
   const loadFeedback = async () => {
     try {
@@ -112,7 +113,7 @@ const Insights = () => {
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/feedback`,
+        `${API_BASE_URL}/api/feedback`,
         form
       );
 
@@ -316,11 +317,11 @@ const Insights = () => {
                             className="image-label"
                             style={{ color: colors.textMuted }}
                           >
-                            1
+                            {`Slide ${galleryIndex + 1} of ${galleryItems.length}`}
                           </p>
                           <motion.img
                             src={galleryItems[galleryIndex].before}
-                            alt="Image 1"
+                            alt={galleryItems[galleryIndex].title + " "}
                             className="transformation-image"
                             onClick={() =>
                               setZoomImage(galleryItems[galleryIndex].before)
@@ -329,22 +330,17 @@ const Insights = () => {
                             transition={{ duration: 0.3 }}
                           />
                         </div>
-                        <div
-                          className="arrow-divider"
-                          style={{ color: colors.primary }}
-                        >
-                          &
-                        </div>
+
                         <div className="image-container">
                           <p
                             className="image-label"
                             style={{ color: colors.textMuted }}
                           >
-                            2
+                            {`Slide ${galleryIndex + 1} of ${galleryItems.length}`}
                           </p>
                           <motion.img
                             src={galleryItems[galleryIndex].after}
-                            alt="Image 2"
+                            alt={galleryItems[galleryIndex].title + ""}
                             className="transformation-image"
                             onClick={() =>
                               setZoomImage(galleryItems[galleryIndex].after)
