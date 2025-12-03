@@ -3,8 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
+
 
 dotenv.config();
 
@@ -21,19 +20,8 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // session middleware
-app.use(session({
-    secret: process.env.ADMIN_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    }
-  }));
 
 
 // MongoDB Connection
