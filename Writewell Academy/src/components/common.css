@@ -1,0 +1,181 @@
+.logo {
+    width: 12vw;
+    height: 12vw;
+    max-width: 100px;
+    max-height: 100px;
+    min-width: 60px;
+    min-height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.colour{
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 100;
+    border-radius: 12px;
+    padding: 8px 16px;
+}
+
+a{
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1e293b;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 16px;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+a:hover {
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.05);
+    transform: translateY(-2px);
+}
+
+a:hover::after {
+    width: calc(100% - 32px);
+}
+
+/* Header with theme support */
+.header-nav {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .header-nav {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] a {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] a:hover {
+    color: #818cf8;
+    background: rgba(129, 140, 248, 0.1);
+}
+
+[data-theme="dark"] a::after {
+    background: linear-gradient(90deg, #818cf8, #a78bfa);
+}
+
+.nav-link {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+    color: inherit;
+}
+
+/* Global body improvements with theme support */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 30%, #f0f9ff 100%);
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #0f172a 100%);
+    color: #f1f5f9;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better focus styles */
+*:focus {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+[data-theme="dark"] *:focus-visible {
+    outline-color: #818cf8;
+}
+
+/* Selection color */
+::selection {
+    background: rgba(99, 102, 241, 0.2);
+    color: #1e293b;
+}
+
+[data-theme="dark"] ::selection {
+    background: rgba(129, 140, 248, 0.3);
+    color: #f1f5f9;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #818cf8, #a78bfa);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+}
+
+.header-title {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+}
