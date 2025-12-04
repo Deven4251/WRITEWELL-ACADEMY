@@ -14,24 +14,28 @@ const app = express();
 // ----------------------------
 // CORS CONFIGURATION (FIXED)
 // ----------------------------
-
 const allowedOrigins = [
+  "https://writewell-academy.vercel.app",
   "http://localhost:5173",
-  "http://localhost:3000",
-  "https://writewell-academy.vercel.app"   // your real frontend URL
+  "http://localhost:3000"
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow API testing tools or server-side calls with no origin
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow backend tools & server-to-server calls
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ BLOCKED ORIGIN:", origin);
+        callback(new Error("CORS blocked"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
