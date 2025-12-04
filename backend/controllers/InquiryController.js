@@ -1,5 +1,6 @@
 const Inquiry = require("../models/Inquiry");
-const nodemailer = require("nodemailer");
+const formData = require("form-data");
+const Mailgun = require("mailgun.js");
 
 // HTML escape function to prevent XSS in emails
 function escapeHtml(text) {
@@ -49,13 +50,13 @@ exports.handleInquiry = async (req, res) => {
     console.log("✅ Inquiry saved successfully:", inquiry._id);
 
     // Send email asynchronously (don't wait for it - return response immediately)
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.ADMIN_EMAIL) {
+    if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN && process.env.ADMIN_EMAIL) {
       // Send email in background (fire and forget)
       sendEmailAsync(name, email, phone, message, inquiry._id).catch(err => {
         // Already logged in sendEmailAsync
       });
     } else {
-      console.warn("⚠️  Email credentials not configured. Skipping email notification.");
+      console.warn("⚠️  Mailgun credentials not configured. Skipping email notification.");
     }
 
     // Return response immediately (don't wait for email)
@@ -88,38 +89,37 @@ exports.handleInquiry = async (req, res) => {
 // Async email sending function (runs in background)
 async function sendEmailAsync(name, email, phone, message, inquiryId) {
   try {
-    console.log("📧 Attempting to send notification email...");
+    console.log("📧 Attempting to send notification email via Mailgun...");
 
-    // Create transporter with timeout settings
-    // Trim and remove spaces from email password (Gmail App Passwords shouldn't have spaces)
-    const emailUser = process.env.EMAIL_USER?.trim();
-    const emailPass = process.env.EMAIL_PASS?.trim()?.replace(/\s+/g, '');
+    // Get Mailgun credentials
+    const apiKey = process.env.MAILGUN_API_KEY?.trim();
+    const domain = process.env.MAILGUN_DOMAIN?.trim();
+    const adminEmail = process.env.ADMIN_EMAIL?.trim();
+    const fromEmail = process.env.MAILGUN_FROM_EMAIL?.trim() || `noreply@${domain}`;
 
-    if (!emailUser || !emailPass) {
-      throw new Error("Email credentials not properly configured");
+    if (!apiKey || !domain || !adminEmail) {
+      throw new Error("Mailgun credentials not properly configured. Required: MAILGUN_API_KEY, MAILGUN_DOMAIN, ADMIN_EMAIL");
     }
 
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: emailUser,
-        pass: emailPass
-      },
-      tls: {
-        rejectUnauthorized: false,
-        minVersion: "TLSv1.2"
-      },
-      // Timeout settings for Render
-      connectionTimeout: 10000, // 10 seconds
-      socketTimeout: 10000, // 10 seconds
-      greetingTimeout: 10000, // 10 seconds
-      // Retry logic
-      pool: true,
-      maxConnections: 1,
-      maxMessages: 3
+    // Get region (US or EU) - default to US
+    const region = process.env.MAILGUN_REGION?.trim()?.toLowerCase() || "us";
+
+    console.log("📧 Mailgun config:", { domain, fromEmail, adminEmail, region });
+
+    // Initialize Mailgun client
+    const mailgun = new Mailgun(formData);
+    const mg = mailgun.client({
+      username: "api",
+      key: apiKey
     });
+
+    // Set region if EU (default is US)
+    if (region === "eu") {
+      mg.setRegion("eu");
+      console.log("🌍 Using Mailgun EU region");
+    } else {
+      console.log("🇺🇸 Using Mailgun US region (default)");
+    }
 
     // Escape all user input to prevent XSS attacks in emails
     const escapedName = escapeHtml(name);
@@ -127,41 +127,81 @@ async function sendEmailAsync(name, email, phone, message, inquiryId) {
     const escapedPhone = escapeHtml(phone);
     const escapedMessage = escapeHtml(message);
 
-    // Send email with timeout (verify happens automatically on send)
-    const mailOptions = {
-      from: `"Writewell Academy" <${emailUser}>`,
-      to: process.env.ADMIN_EMAIL?.trim(),
+    // Build email HTML content
+    const htmlContent = `
+      <h2>New Inquiry (ID: ${inquiryId})</h2>
+      <p><strong>Name:</strong> ${escapedName}</p>
+      <p><strong>Email:</strong> ${escapedEmail}</p>
+      <p><strong>Phone:</strong> ${escapedPhone}</p>
+      <p><strong>Message:</strong> ${escapedMessage}</p>
+      <hr>
+      <p><small>Received at: ${new Date().toLocaleString()}</small></p>
+    `;
+
+    // Prepare message data - Mailgun accepts 'to' as string (better compatibility)
+    const messageData = {
+      from: `"Writewell Academy" <${fromEmail}>`,
+      to: adminEmail, // String format (can also use array, but string is more reliable)
       subject: "New Inquiry Received",
-      html: `
-        <h2>New Inquiry (ID: ${inquiryId})</h2>
-        <p><strong>Name:</strong> ${escapedName}</p>
-        <p><strong>Email:</strong> ${escapedEmail}</p>
-        <p><strong>Phone:</strong> ${escapedPhone}</p>
-        <p><strong>Message:</strong> ${escapedMessage}</p>
-        <hr>
-        <p><small>Received at: ${new Date().toLocaleString()}</small></p>
-      `
+      html: htmlContent
     };
 
+    console.log("📤 Sending email via Mailgun...", { from: messageData.from, to: messageData.to });
+
+    // Send email with timeout
+    const emailPromise = mg.messages.create(domain, messageData);
+
     const info = await Promise.race([
-      transporter.sendMail(mailOptions),
+      emailPromise,
       new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Email timeout after 15 seconds")), 15000)
       )
     ]);
 
-    console.log("✅ Email sent successfully! Message ID:", info.messageId);
-
-  } catch (emailError) {
-    // Log detailed error but don't throw (don't affect main request)
-    console.error("⚠️  Email sending failed (inquiry saved successfully):", {
-      message: emailError.message,
-      code: emailError.code,
-      command: emailError.command,
-      responseCode: emailError.responseCode
+    // Mailgun response format: { id: "...", message: "Queued. Thank you." }
+    console.log("✅ Email sent successfully via Mailgun!", {
+      messageId: info.id || info.message,
+      status: info.status,
+      response: info
     });
 
-    // Optionally log to database or external service for monitoring
-    console.log("💡 Tip: Consider using a transactional email service (SendGrid, Mailgun) for better reliability on Render");
+  } catch (emailError) {
+    // Enhanced error logging for Mailgun-specific errors
+    let errorDetails = {
+      message: emailError.message,
+      name: emailError.name
+    };
+
+    // Extract Mailgun API error details
+    if (emailError.status || emailError.statusCode) {
+      errorDetails.status = emailError.status || emailError.statusCode;
+    }
+
+    if (emailError.details) {
+      errorDetails.details = emailError.details;
+    }
+
+    // Try to extract response body for more context
+    if (emailError.response) {
+      errorDetails.responseStatus = emailError.response.status;
+      errorDetails.responseBody = emailError.response.body || emailError.response.data;
+    }
+
+    if (emailError.body) {
+      errorDetails.body = emailError.body;
+    }
+
+    console.error("⚠️  Email sending failed (inquiry saved successfully):", errorDetails);
+
+    // Log specific error messages for common issues
+    if (emailError.message?.includes("Forbidden") || emailError.status === 401 || emailError.status === 403) {
+      console.error("🔐 Mailgun Authentication Error: Check your API key is correct");
+    } else if (emailError.message?.includes("Domain") || emailError.status === 404) {
+      console.error("🌐 Mailgun Domain Error: Check your domain configuration and that it's verified");
+    } else if (emailError.message?.includes("timeout")) {
+      console.error("⏱️  Mailgun Timeout: Request took too long, but this shouldn't affect your database save");
+    } else if (emailError.message?.includes("Unauthorized")) {
+      console.error("🔑 Mailgun Unauthorized: Verify your API key and domain settings");
+    }
   }
 }
