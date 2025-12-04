@@ -1,6 +1,19 @@
 const Inquiry = require("../models/Inquiry");
 const nodemailer = require("nodemailer");
 
+// HTML escape function to prevent XSS in emails
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
 exports.handleInquiry = async (req, res) => {
   try {
     console.log("📥 Inquiry endpoint hit!");
@@ -80,7 +93,7 @@ async function sendEmailAsync(name, email, phone, message, inquiryId) {
     // Create transporter with timeout settings
     // Trim and remove spaces from email password (Gmail App Passwords shouldn't have spaces)
     const emailUser = process.env.EMAIL_USER?.trim();
-    const emailPass = process.env.EMAIL_PASS?.trim().replace(/\s+/g, '');
+    const emailPass = process.env.EMAIL_PASS?.trim()?.replace(/\s+/g, '');
 
     if (!emailUser || !emailPass) {
       throw new Error("Email credentials not properly configured");
@@ -108,6 +121,12 @@ async function sendEmailAsync(name, email, phone, message, inquiryId) {
       maxMessages: 3
     });
 
+    // Escape all user input to prevent XSS attacks in emails
+    const escapedName = escapeHtml(name);
+    const escapedEmail = escapeHtml(email);
+    const escapedPhone = escapeHtml(phone);
+    const escapedMessage = escapeHtml(message);
+
     // Send email with timeout (verify happens automatically on send)
     const mailOptions = {
       from: `"Writewell Academy" <${emailUser}>`,
@@ -115,10 +134,10 @@ async function sendEmailAsync(name, email, phone, message, inquiryId) {
       subject: "New Inquiry Received",
       html: `
         <h2>New Inquiry (ID: ${inquiryId})</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Message:</strong> ${message}</p>
+        <p><strong>Name:</strong> ${escapedName}</p>
+        <p><strong>Email:</strong> ${escapedEmail}</p>
+        <p><strong>Phone:</strong> ${escapedPhone}</p>
+        <p><strong>Message:</strong> ${escapedMessage}</p>
         <hr>
         <p><small>Received at: ${new Date().toLocaleString()}</small></p>
       `
