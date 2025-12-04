@@ -112,10 +112,7 @@ const Insights = () => {
     };
 
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}/api/feedback`,
-        form
-      );
+      const res = await api.post("/api/feedback", form);
 
       const saved = res.data.feedback || res.data || null;
 

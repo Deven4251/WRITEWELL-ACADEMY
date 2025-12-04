@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Header from "../components/Header";
@@ -7,10 +8,12 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
-import axios from "axios";
 import "./contact.css";
 import MapComponent from "../components/mapcomponent";
+import api from "../api/axios";
 
+
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const Contact = () => {
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
@@ -32,10 +35,7 @@ const Contact = () => {
     setStatus("");
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/inquiry`,
-        form
-      );
+      const res = await api.post("/api/inquiry", form);
 
       if (res.data.ok) {
         alert("✔ Message sent successfully!");

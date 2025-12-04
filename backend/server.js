@@ -12,10 +12,10 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 const app = express();
 
 // ----------------------------
-// CORS CONFIGURATION (FIXED)
+// CORS CONFIGURATION (FINAL)
 // ----------------------------
 const allowedOrigins = [
-  "https://writewell-academy.vercel.app/",
+  "https://writewell-academy.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000"
 ];
@@ -23,9 +23,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow backend tools & server-to-server calls
-      if (!origin) return callback(null, true);
-
+      if (!origin) return callback(null, true); // Allow backend tools, curl, postman
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -37,6 +35,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -54,7 +53,7 @@ mongoose
 // ----------------------------
 // ROUTES
 // ----------------------------
-app.use("/api/Inquiry", inquiryRoutes);
+app.use("/api/inquiry", inquiryRoutes);
 app.use("/api/feedback", feedbackRoutes);
 
 // Root endpoint
