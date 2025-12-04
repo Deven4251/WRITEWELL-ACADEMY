@@ -1,8 +1,8 @@
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
 
 dotenv.config();
 
@@ -12,43 +12,52 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 const app = express();
 
 // ----------------------------
-// CORS CONFIGURATION (FINAL)
+// CORS CONFIGURATION (WORKING)
 // ----------------------------
-const allowedOrigins = [
-  "https://writewell-academy.vercel.app",
-  "http://localhost:5173",
-  "http://localhost:3000"
-];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // Allow backend tools, curl, postman
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("❌ BLOCKED ORIGIN:", origin);
-        callback(new Error("CORS blocked"));
-      }
-    },
+    origin: true,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Body parsing middleware (must be before routes)
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// Request logging middleware (for debugging)
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+  if (req.method === "POST" || req.method === "PUT") {
+    console.log("Request body:", JSON.stringify(req.body, null, 2));
+    console.log("Content-Type:", req.get("Content-Type"));
+  }
+  next();
+});
 
 // ----------------------------
 // MongoDB Connection
 // ----------------------------
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("📦 MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+    console.error("MONGO_URI:", process.env.MONGO_URI ? "Set" : "NOT SET");
+    process.exit(1);
+  });
+
+// Handle connection events
+mongoose.connection.on("error", (err) => {
+  console.error("❌ MongoDB Connection Error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.warn("⚠️  MongoDB Disconnected");
+});
 
 // ----------------------------
 // ROUTES
@@ -57,9 +66,9 @@ app.use("/api/inquiry", inquiryRoutes);
 app.use("/api/feedback", feedbackRoutes);
 
 // Root endpoint
-app.get("/", (req, res) =>
-  res.send("Handwriting Excellence Backend Running...")
-);
+app.get("/", (req, res) => {
+  res.send("Handwriting Excellence Backend Running...");
+});
 
 // ----------------------------
 // START SERVER

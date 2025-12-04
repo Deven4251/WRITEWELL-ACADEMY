@@ -1,22 +1,20 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Header from "../components/Header";
 import ContactAnimation from "../components/ContactAnimation";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, MapPin, Send } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 import "./contact.css";
 import MapComponent from "../components/mapcomponent";
-import api from "../api/axios";
+import api from "../api/axios";   // <<< using axios instance
 
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 const Contact = () => {
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -30,22 +28,56 @@ const Contact = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // ---------------------------------------------------
+  // SEND MESSAGE (FINALLY CORRECT)
+  // ---------------------------------------------------
   const sendMessage = async () => {
     setLoading(true);
     setStatus("");
 
+    // Validate form before sending
+    if (!form.name || !form.email || !form.phone || !form.message) {
+      alert("❌ Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await api.post("/api/inquiry", form);
+      console.log("📤 Sending inquiry:", form);
+      console.log("API Base URL:", import.meta.env.VITE_API_URL);
+
+      const res = await api.post("/api/inquiry", form, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      console.log("✅ Response received:", res.data);
 
       if (res.data.ok) {
         alert("✔ Message sent successfully!");
         setForm({ name: "", email: "", phone: "", message: "" });
+        setStatus("success");
       } else {
-        alert("❌ " + res.data.error);
+        alert("❌ " + (res.data.error || "Unknown error"));
+        setStatus("error");
       }
     } catch (err) {
-      alert("❌ Server error. Try again later.");
+      console.error("❌ Inquiry error:", err);
+      console.error("Error response:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+
+      let errorMsg = "Server error. Try again later.";
+      if (err.response?.data?.error) {
+        errorMsg = err.response.data.error;
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+
+      alert("❌ " + errorMsg);
+      setStatus("error");
     }
+
     setLoading(false);
   };
 
@@ -54,7 +86,7 @@ const Contact = () => {
       <Header />
 
       <main className="contact-main" data-theme={theme}>
-        {/* Hero Section */}
+        {/* HERO */}
         <section className="contact-hero">
           <div className="container">
             <motion.div
@@ -73,11 +105,12 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* Form Section */}
-        <section className="contact-form-section" data-theme={theme}>
+        {/* FORM SECTION */}
+        <section className="contact-form-section">
           <div className="container">
             <div className="contact-layout">
-              {/* Left: Animation */}
+
+              {/* LEFT - Animation */}
               <motion.div
                 className="contact-animation-wrapper"
                 initial={{ opacity: 0, x: -50 }}
@@ -88,7 +121,7 @@ const Contact = () => {
                 <ContactAnimation width="100%" height="400px" />
               </motion.div>
 
-              {/* Right: Form */}
+              {/* RIGHT - Form */}
               <motion.div
                 className="contact-form-wrapper"
                 initial={{ opacity: 0, x: 50 }}
@@ -101,6 +134,8 @@ const Contact = () => {
                 </h2>
 
                 <div className="futuristic-form">
+
+                  {/* Name */}
                   <div className="input-group-futuristic">
                     <input
                       type="text"
@@ -111,14 +146,13 @@ const Contact = () => {
                       placeholder="Full Name"
                       required
                       style={{
-                        background: theme === 'dark' ? colors.surface + '60' : colors.background,
-                        borderColor: colors.border,
+                        background: theme === "dark" ? colors.surface + "60" : colors.background,
                         color: colors.textDark,
                       }}
                     />
-                    <div className="input-glow-line" style={{ background: colors.gradient.primary }}></div>
                   </div>
 
+                  {/* Phone */}
                   <div className="input-group-futuristic">
                     <input
                       type="text"
@@ -129,14 +163,13 @@ const Contact = () => {
                       placeholder="Phone Number"
                       required
                       style={{
-                        background: theme === 'dark' ? colors.surface + '60' : colors.background,
-                        borderColor: colors.border,
+                        background: theme === "dark" ? colors.surface + "60" : colors.background,
                         color: colors.textDark,
                       }}
                     />
-                    <div className="input-glow-line" style={{ background: colors.gradient.primary }}></div>
                   </div>
 
+                  {/* Email */}
                   <div className="input-group-futuristic">
                     <input
                       type="email"
@@ -147,14 +180,13 @@ const Contact = () => {
                       placeholder="Email Address"
                       required
                       style={{
-                        background: theme === 'dark' ? colors.surface + '60' : colors.background,
-                        borderColor: colors.border,
+                        background: theme === "dark" ? colors.surface + "60" : colors.background,
                         color: colors.textDark,
                       }}
                     />
-                    <div className="input-glow-line" style={{ background: colors.gradient.primary }}></div>
                   </div>
 
+                  {/* Message */}
                   <div className="input-group-futuristic">
                     <textarea
                       name="message"
@@ -165,43 +197,35 @@ const Contact = () => {
                       rows="4"
                       required
                       style={{
-                        background: theme === 'dark' ? colors.surface + '60' : colors.background,
-                        borderColor: colors.border,
+                        background: theme === "dark" ? colors.surface + "60" : colors.background,
                         color: colors.textDark,
                       }}
-                    ></textarea>
-                    <div className="input-glow-line" style={{ background: colors.gradient.primary }}></div>
+                    />
                   </div>
 
+                  {/* Submit Button */}
                   <motion.button
                     className="futuristic-submit-btn"
                     whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={sendMessage}
                     disabled={loading}
                     style={{
                       background: colors.gradient.primary,
-                      color: '#fff',
+                      color: "#fff",
                     }}
                   >
                     <Send size={20} />
-                    <span>{loading ? "Transmitting..." : " Transmit Message"}</span>
-                    <div className="btn-ripple"></div>
+                    <span>{loading ? "Transmitting..." : "Transmit Message"}</span>
                   </motion.button>
-
-                  {status && (
-                    <p className="status-text" style={{ color: colors.textMuted }}>
-                      {status}
-                    </p>
-                  )}
                 </div>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Contact Details Section */}
-        <section className="contact-details-section" data-theme={theme}>
+        {/* CONTACT DETAILS */}
+        <section className="contact-details-section">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -215,38 +239,24 @@ const Contact = () => {
               </h2>
 
               <div className="details-grid">
-                <motion.div
-                  className="detail-item"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                  style={{
-                    borderColor: colors.border,
-                  }}
-                >
+                {/* Address */}
+                <motion.div className="detail-item" whileHover={{ scale: 1.05, y: -5 }}>
                   <div className="detail-icon-wrapper" style={{ color: colors.primary }}>
                     <MapPin size={32} />
-                    <div className="icon-pulse" style={{ background: colors.primary + '30' }}></div>
                   </div>
                   <div className="detail-content">
                     <h3 style={{ color: colors.textDark }}>Address</h3>
                     <p style={{ color: colors.textMuted }}>
-                      Klassic Landmark Apartment, Junnasandara,<br />
-                      Bangalore - 560035
+                      Klassic Landmark Apartment,<br />
+                      Junnasandara, Bangalore - 560035
                     </p>
                   </div>
                 </motion.div>
 
-                <motion.div
-                  className="detail-item"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                  style={{
-                    borderColor: colors.border,
-                  }}
-                >
+                {/* Email */}
+                <motion.div className="detail-item" whileHover={{ scale: 1.05, y: -5 }}>
                   <div className="detail-icon-wrapper" style={{ color: colors.accent }}>
                     <Mail size={32} />
-                    <div className="icon-pulse" style={{ background: colors.accent + '30' }}></div>
                   </div>
                   <div className="detail-content">
                     <h3 style={{ color: colors.textDark }}>Email</h3>

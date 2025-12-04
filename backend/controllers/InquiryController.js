@@ -1,137 +1,99 @@
 const Inquiry = require("../models/Inquiry");
-const sendEmail = require("../utils/sendEmail");
-const generateReceiptPDF = require("../utils/generateReceipt");
+const nodemailer = require("nodemailer");
 
 exports.handleInquiry = async (req, res) => {
   try {
+    console.log("📥 Inquiry endpoint hit!");
+    console.log("Request method:", req.method);
+    console.log("Request body:", req.body);
+    console.log("Request headers:", req.headers);
+
     const { name, email, phone, message } = req.body;
 
-    // 1. Save Inquiry
+    console.log("📥 Extracted data:", { name, email, phone, message: message?.substring(0, 50) });
+
+    // Validate required fields
+    if (!name || !email || !phone || !message) {
+      return res.status(400).json({
+        ok: false,
+        error: "All fields are required (name, email, phone, message)"
+      });
+    }
+
+    // Check MongoDB connection
+    const mongoose = require("mongoose");
+    if (mongoose.connection.readyState !== 1) {
+      console.error("❌ MongoDB not connected. State:", mongoose.connection.readyState);
+      return res.status(503).json({
+        ok: false,
+        error: "Database connection unavailable. Please try again later."
+      });
+    }
+
+    // Save inquiry to database
+    console.log("💾 Saving inquiry to database...");
     const inquiry = await Inquiry.create({ name, email, phone, message });
+    console.log("✅ Inquiry saved successfully:", inquiry._id);
 
-    // 2. Generate PDF
-    const pdfPath = generateReceiptPDF({
-      name,
-      email,
-      phone,
-      message,
-      inquiryId: inquiry._id.toString(),
-    });
+    // Send email (non-blocking - don't fail if email fails)
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.ADMIN_EMAIL) {
+      try {
+        console.log("📧 Sending notification email...");
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        });
 
-    // 3. Send User Email
-    await sendEmail({
-      to: email,
-      subject: "MAIL REGARDING YOUR ENQUIRY",
-      html: `
-        <div style="font-family: Arial, Helvetica, sans-serif; padding: 20px; background:#f7f7f7;">
-          <div style="max-width: 600px; margin: auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        await transporter.sendMail({
+          from: `"Writewell Academy" <${process.env.EMAIL_USER}>`,
+          to: process.env.ADMIN_EMAIL,
+          subject: "New Inquiry Received",
+          html: `
+            <h2>New Inquiry</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Message:</strong> ${message}</p>
+          `
+        });
+        console.log("✅ Email sent successfully!");
+      } catch (emailError) {
+        // Log email error but don't fail the request
+        console.error("⚠️  Email sending failed (inquiry still saved):", emailError.message);
+      }
+    } else {
+      console.warn("⚠️  Email credentials not configured. Skipping email notification.");
+    }
 
-            <!-- Banner -->
-            <img
-  src="https://drive.google.com/uc?export=view&id=1AvwTILxnMRTsHy5_jn5cXhN-gcQ61y0B"
-  alt="Writewell Academy"
-  style="width:100%; display:block; border:0; margin:0; padding:0;"
-/>
-            <div style="padding: 25px;">
-              <h2 style="color: #333; font-weight: 600; margin-bottom: 10px;">
-                Hello ${name},
-              </h2>
+    return res.json({ ok: true, inquiry, message: "Inquiry submitted successfully" });
 
-              <p style="font-size: 15px; color: #555; line-height: 1.6;">
-                Thank you for reaching out to <b>Writewell Academy</b>. We’ve successfully received your inquiry.
-              </p>
-
-              <p style="font-size: 15px; color: #555; line-height: 1.6;">
-                Our Head Teacher will personally review your message and get back to you shortly with the best possible guidance.
-              </p>
-
-              <div style="margin: 25px 0; padding: 15px; background: #f0f8ff; border-left: 4px solid #007bff; border-radius: 6px;">
-                <p style="font-size: 14px; color:#333; margin: 0;">
-                  <b>Your Inquiry Summary:</b><br>
-                  <span style="color:#555;">"${message}"</span>
-                </p>
-              </div>
-
-              <p style="font-size: 15px; color: #555; line-height: 1.6;">
-                We appreciate your time and interest in improving handwriting skills with us.
-              </p>
-
-              <p style="font-size: 15px; color: #333; line-height: 1.6; margin-top: 20px;">
-                Warm regards,<br>
-                <b>Writewell Academy</b>
-              </p>
-            </div>
-          </div>
-        </div>
-      `,
-    });
-
-    // 4. Send Admin Email
-    await sendEmail({
-      to: process.env.ADMIN_EMAIL,
-      subject: "New Inquiry Received",
-      html: `
-        <div style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px;">
-          <div style="
-            max-width: 600px;
-            margin: auto;
-            background: #ffffff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-          ">
-
-            <h2 style="color: #333333; margin-bottom: 10px;">New Inquiry Received</h2>
-            <p style="color: #555555; margin-top: 0;">
-              You have received a new inquiry. Details are provided below:
-            </p>
-
-            <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
-
-            <table cellpadding="6" style="width: 100%; border-collapse: collapse; font-size: 15px; color: #333;">
-              <tr>
-                <td style="font-weight: bold; width: 120px;">Name:</td>
-                <td>${name}</td>
-              </tr>
-              <tr>
-                <td style="font-weight: bold;">Email:</td>
-                <td>${email}</td>
-              </tr>
-              <tr>
-                <td style="font-weight: bold;">Phone:</td>
-                <td>${phone}</td>
-              </tr>
-              <tr>
-                <td style="font-weight: bold; vertical-align: top;">Message:</td>
-                <td style="white-space: pre-line;">${message}</td>
-              </tr>
-            </table>
-
-            <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
-
-            <p style="color: #777777; font-size: 14px;">
-              A PDF receipt has been attached with this email.
-            </p>
-
-          </div>
-        </div>
-      `,
-      attachments: [
-        { filename: "receipt.pdf", path: pdfPath }
-      ]
-
-    });
-
-    return res.status(200).json({
-      ok: true,
-      message: "Inquiry processed successfully (email + PDF)",
-    });
   } catch (err) {
-    console.log("❌ SERVER CRASH:", err);
+    console.error("❌ Inquiry Error:", err);
+    console.error("Error details:", {
+      message: err.message,
+      stack: err.stack,
+      name: err.name
+    });
+
+    // Provide more specific error messages
+    let errorMessage = "Server error while submitting inquiry";
+    if (err.name === "ValidationError") {
+      errorMessage = "Validation error: " + Object.values(err.errors).map(e => e.message).join(", ");
+    } else if (err.code === 11000) {
+      errorMessage = "Duplicate entry detected";
+    } else if (err.message) {
+      errorMessage = err.message;
+    }
 
     return res.status(500).json({
       ok: false,
-      error: "Server error",
+      error: errorMessage
     });
   }
 };
