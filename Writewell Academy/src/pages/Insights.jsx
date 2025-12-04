@@ -16,7 +16,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const galleryItems = [
   {
-    before: "../images/img1 .jpg",
+    before: "../images/img1.jpg",
     after: "../images/img2.jpg",
     title: "Grade 5 Improvement",
     description: "Remarkable progress in letter formation and spacing",
@@ -36,9 +36,9 @@ const galleryItems = [
   },
   {
     before:
-      "../images/aniket 3rd.jpg",
+      "../images/aniket3rd.jpg",
     after:
-      "../images/img 6 after.jpg",
+      "../images/img6after.jpg",
     title: "Grade 11 Transformation",
     description: "Professional handwriting ready for competitive exams",
   },

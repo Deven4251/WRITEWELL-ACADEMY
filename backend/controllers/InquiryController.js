@@ -122,8 +122,6 @@ exports.handleInquiry = async (req, res) => {
 
     });
 
-    console.log("✅ Inquiry processed successfully");
-
     return res.status(200).json({
       ok: true,
       message: "Inquiry processed successfully (email + PDF)",

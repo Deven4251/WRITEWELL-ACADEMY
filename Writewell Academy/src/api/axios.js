@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://writewell-academy-1.onrender.com",
-    withCredentials: true // CRITICAL for session cookies
+    baseURL: import.meta.env.VITE_API_URL,   // <<< USE ENV VAR
+    withCredentials: true
 });
 
 export default api;
