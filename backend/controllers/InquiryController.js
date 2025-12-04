@@ -49,19 +49,14 @@ exports.handleInquiry = async (req, res) => {
     const inquiry = await Inquiry.create({ name, email, phone, message });
     console.log("✅ Inquiry saved successfully:", inquiry._id);
 
-    // Send emails asynchronously (don't wait for it - return response immediately)
+    // Send email asynchronously (don't wait for it - return response immediately)
     if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN && process.env.ADMIN_EMAIL) {
       // Send admin notification email in background
       sendAdminNotificationEmail(name, email, phone, message, inquiry._id).catch(err => {
         // Already logged in sendAdminNotificationEmail
       });
-
-      // Send user confirmation email in background
-      sendUserConfirmationEmail(name, email, inquiry._id).catch(err => {
-        // Already logged in sendUserConfirmationEmail
-      });
     } else {
-      console.warn("⚠️  Mailgun credentials not configured. Skipping email notifications.");
+      console.warn("⚠️  Mailgun credentials not configured. Skipping email notification.");
     }
 
     // Return response immediately (don't wait for email)
@@ -207,114 +202,6 @@ async function sendAdminNotificationEmail(name, email, phone, message, inquiryId
       console.error("⏱️  Mailgun Timeout: Request took too long, but this shouldn't affect your database save");
     } else if (emailError.message?.includes("Unauthorized")) {
       console.error("🔑 Mailgun Unauthorized: Verify your API key and domain settings");
-    }
-  }
-}
-
-// Send user confirmation email (runs in background)
-async function sendUserConfirmationEmail(name, userEmail, inquiryId) {
-  try {
-    console.log("📧 Attempting to send USER confirmation email via Mailgun...");
-
-    // Get Mailgun credentials
-    const apiKey = process.env.MAILGUN_API_KEY?.trim();
-    const domain = process.env.MAILGUN_DOMAIN?.trim();
-    const fromEmail = process.env.MAILGUN_FROM_EMAIL?.trim() || `noreply@${domain}`;
-
-    if (!apiKey || !domain) {
-      throw new Error("Mailgun credentials not properly configured");
-    }
-
-    // Get region (US or EU) - default to US
-    const region = process.env.MAILGUN_REGION?.trim()?.toLowerCase() || "us";
-
-    // Initialize Mailgun client
-    const mailgun = new Mailgun(formData);
-    const mg = mailgun.client({
-      username: "api",
-      key: apiKey
-    });
-
-    // Set region if EU (default is US)
-    if (region === "eu") {
-      mg.setRegion("eu");
-    }
-
-    // Escape user name for email
-    const escapedName = escapeHtml(name);
-
-    // Build confirmation email HTML content
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #333;">Thank You for Contacting Writewell Academy!</h2>
-        <p>Dear ${escapedName},</p>
-        <p>We have received your inquiry and will get back to you soon.</p>
-        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-          <p><strong>Inquiry Reference ID:</strong> ${inquiryId}</p>
-          <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
-        </div>
-        <p>Our team typically responds within 24-48 hours.</p>
-        <p>If you have any urgent questions, please feel free to contact us directly.</p>
-        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-        <p style="color: #666; font-size: 12px;">
-          Best regards,<br>
-          The Writewell Academy Team<br>
-          <a href="mailto:academywritewell@gmail.com">academywritewell@gmail.com</a>
-        </p>
-      </div>
-    `;
-
-    // Prepare message data
-    const messageData = {
-      from: `"Writewell Academy" <${fromEmail}>`,
-      to: userEmail,
-      subject: "Thank You for Your Inquiry - Writewell Academy",
-      html: htmlContent
-    };
-
-    console.log("📤 Sending user confirmation email via Mailgun...", { from: messageData.from, to: messageData.to });
-
-    // Send email with timeout
-    const emailPromise = mg.messages.create(domain, messageData);
-
-    const info = await Promise.race([
-      emailPromise,
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Email timeout after 15 seconds")), 15000)
-      )
-    ]);
-
-    console.log("✅ User confirmation email sent successfully via Mailgun!", {
-      messageId: info.id || info.message,
-      status: info.status
-    });
-
-  } catch (emailError) {
-    // Enhanced error logging
-    let errorDetails = {
-      message: emailError.message,
-      name: emailError.name
-    };
-
-    if (emailError.status || emailError.statusCode) {
-      errorDetails.status = emailError.status || emailError.statusCode;
-    }
-
-    if (emailError.response) {
-      errorDetails.responseStatus = emailError.response.status;
-      errorDetails.responseBody = emailError.response.body || emailError.response.data;
-    }
-
-    console.error("⚠️  User confirmation email failed (inquiry saved successfully):", errorDetails);
-
-    // Log specific error messages
-    if (emailError.message?.includes("Forbidden") || emailError.status === 401 || emailError.status === 403) {
-      console.error("🔐 Mailgun Authentication Error for user email");
-    } else if (emailError.message?.includes("Domain") || emailError.status === 404) {
-      console.error("🌐 Mailgun Domain Error - Check domain configuration");
-    } else if (emailError.responseBody?.message?.includes("sandbox")) {
-      console.error("⚠️  IMPORTANT: Sandbox domain restriction - User email must be authorized in Mailgun!");
-      console.error("   Go to Mailgun Dashboard → Authorized Recipients → Add: " + userEmail);
     }
   }
 }
