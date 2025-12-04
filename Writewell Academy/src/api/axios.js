@@ -1,7 +1,13 @@
 import axios from "axios";
 
+// Get the API URL - fallback to localhost for development
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// Log the API URL on load (for debugging)
+console.log("🔗 API Base URL configured as:", API_URL || "NOT SET - using fallback");
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,  // Render backend URL
+    baseURL: API_URL,                       // Render backend URL or localhost fallback
     withCredentials: true,                   // required for CORS cookies
     headers: {
         "Content-Type": "application/json"

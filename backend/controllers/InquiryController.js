@@ -35,44 +35,18 @@ exports.handleInquiry = async (req, res) => {
     const inquiry = await Inquiry.create({ name, email, phone, message });
     console.log("✅ Inquiry saved successfully:", inquiry._id);
 
-    // Send email (non-blocking - don't fail if email fails)
+    // Send email asynchronously (don't wait for it - return response immediately)
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.ADMIN_EMAIL) {
-      try {
-        console.log("📧 Sending notification email...");
-        let transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-          },
-          tls: {
-            rejectUnauthorized: false
-          }
-        });
-
-        await transporter.sendMail({
-          from: `"Writewell Academy" <${process.env.EMAIL_USER}>`,
-          to: process.env.ADMIN_EMAIL,
-          subject: "New Inquiry Received",
-          html: `
-            <h2>New Inquiry</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Message:</strong> ${message}</p>
-          `
-        });
-        console.log("✅ Email sent successfully!");
-      } catch (emailError) {
-        // Log email error but don't fail the request
-        console.error("⚠️  Email sending failed (inquiry still saved):", emailError.message);
-      }
+      // Send email in background (fire and forget)
+      sendEmailAsync(name, email, phone, message, inquiry._id).catch(err => {
+        // Already logged in sendEmailAsync
+      });
     } else {
       console.warn("⚠️  Email credentials not configured. Skipping email notification.");
     }
 
+    // Return response immediately (don't wait for email)
     return res.json({ ok: true, inquiry, message: "Inquiry submitted successfully" });
-
   } catch (err) {
     console.error("❌ Inquiry Error:", err);
     console.error("Error details:", {
@@ -97,3 +71,78 @@ exports.handleInquiry = async (req, res) => {
     });
   }
 };
+
+// Async email sending function (runs in background)
+async function sendEmailAsync(name, email, phone, message, inquiryId) {
+  try {
+    console.log("📧 Attempting to send notification email...");
+
+    // Create transporter with timeout settings
+    // Trim and remove spaces from email password (Gmail App Passwords shouldn't have spaces)
+    const emailUser = process.env.EMAIL_USER?.trim();
+    const emailPass = process.env.EMAIL_PASS?.trim().replace(/\s+/g, '');
+
+    if (!emailUser || !emailPass) {
+      throw new Error("Email credentials not properly configured");
+    }
+
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: emailUser,
+        pass: emailPass
+      },
+      tls: {
+        rejectUnauthorized: false,
+        minVersion: "TLSv1.2"
+      },
+      // Timeout settings for Render
+      connectionTimeout: 10000, // 10 seconds
+      socketTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000, // 10 seconds
+      // Retry logic
+      pool: true,
+      maxConnections: 1,
+      maxMessages: 3
+    });
+
+    // Send email with timeout (verify happens automatically on send)
+    const mailOptions = {
+      from: `"Writewell Academy" <${emailUser}>`,
+      to: process.env.ADMIN_EMAIL?.trim(),
+      subject: "New Inquiry Received",
+      html: `
+        <h2>New Inquiry (ID: ${inquiryId})</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Message:</strong> ${message}</p>
+        <hr>
+        <p><small>Received at: ${new Date().toLocaleString()}</small></p>
+      `
+    };
+
+    const info = await Promise.race([
+      transporter.sendMail(mailOptions),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Email timeout after 15 seconds")), 15000)
+      )
+    ]);
+
+    console.log("✅ Email sent successfully! Message ID:", info.messageId);
+
+  } catch (emailError) {
+    // Log detailed error but don't throw (don't affect main request)
+    console.error("⚠️  Email sending failed (inquiry saved successfully):", {
+      message: emailError.message,
+      code: emailError.code,
+      command: emailError.command,
+      responseCode: emailError.responseCode
+    });
+
+    // Optionally log to database or external service for monitoring
+    console.log("💡 Tip: Consider using a transactional email service (SendGrid, Mailgun) for better reliability on Render");
+  }
+}
