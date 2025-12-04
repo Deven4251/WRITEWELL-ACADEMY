@@ -15,7 +15,7 @@ const app = express();
 // CORS CONFIGURATION (FIXED)
 // ----------------------------
 const allowedOrigins = [
-  "https://writewell-academy.vercel.app",
+  "https://writewell-academy.vercel.app/",
   "http://localhost:5173",
   "http://localhost:3000"
 ];
@@ -36,7 +36,7 @@ app.use(
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
-
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
