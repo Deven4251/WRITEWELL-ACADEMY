@@ -13,12 +13,12 @@ module.exports = function generateReceiptPDF({ name, email, phone, message, inqu
             doc.on("data", chunk => buffers.push(chunk));
             doc.on("end", () => resolve(Buffer.concat(buffers)));
 
-            const logoPath = path.join(process.cwd(), "assets", "logo.png");
+            const logoPath = path.join(process.cwd(), "assets", "assets.jpg");
 
             // -----------------------------
             // BRAND HEADER
 
-            
+
                 doc.rect(0, 0, doc.page.width, 90)
                     .fill("#4F46E5"); // Writewell Indigo shade
 
