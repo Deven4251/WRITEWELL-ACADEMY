@@ -66,6 +66,6 @@ exports.handleInquiry = async (req, res) => {
 
   } catch (err) {
     console.error("Inquiry Error:", err);
-    res.json({ ok: false, error: "Server Error" });
+    res.json({ ok: false, error: "something is going on wrong" });
   }
 };
