@@ -1,20 +1,20 @@
-
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
 
-dotenv.config();
-
+// Load routes
 const inquiryRoutes = require("./routes/inquiryRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 
+dotenv.config();
+
 const app = express();
 
-// ----------------------------
-// CORS CONFIGURATION (WORKING)
-// ----------------------------
-
+// --------------------------------------------------
+// GLOBAL CORS (BEST FOR FRONTEND PRODUCTION)
+// --------------------------------------------------
 app.use(
   cors({
     origin: true,
@@ -24,54 +24,31 @@ app.use(
   })
 );
 
-// Body parsing middleware (must be before routes)
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+// app.options("*", cors()); // Preflight
 
-// Request logging middleware (for debugging)
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
-  if (req.method === "POST" || req.method === "PUT") {
-    console.log("Request body:", JSON.stringify(req.body, null, 2));
-    console.log("Content-Type:", req.get("Content-Type"));
-  }
-  next();
-});
+// --------------------------------------------------
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// ----------------------------
-// MongoDB Connection
-// ----------------------------
+// --------------------------------------------------
+// DATABASE
+// --------------------------------------------------
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("📦 MongoDB Connected"))
-  .catch((err) => {
-    console.error("❌ MongoDB Connection Error:", err);
-    console.error("MONGO_URI:", process.env.MONGO_URI ? "Set" : "NOT SET");
-    process.exit(1);
-  });
+  .catch((err) => console.error("❌ MongoDB Error:", err));
 
-// Handle connection events
-mongoose.connection.on("error", (err) => {
-  console.error("❌ MongoDB Connection Error:", err);
-});
-
-mongoose.connection.on("disconnected", () => {
-  console.warn("⚠️  MongoDB Disconnected");
-});
-
-// ----------------------------
+// --------------------------------------------------
 // ROUTES
-// ----------------------------
+// --------------------------------------------------
 app.use("/api/inquiry", inquiryRoutes);
 app.use("/api/feedback", feedbackRoutes);
 
-// Root endpoint
+// Health check
 app.get("/", (req, res) => {
-  res.send("Handwriting Excellence Backend Running...");
+  res.send("Writewell Academy Backend Running on Render!");
 });
 
-// ----------------------------
-// START SERVER
-// ----------------------------
+// --------------------------------------------------
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Backend Running on Port ${PORT}`));

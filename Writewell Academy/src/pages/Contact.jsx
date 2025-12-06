@@ -9,7 +9,7 @@ import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 import "./contact.css";
 import MapComponent from "../components/mapcomponent";
-import api from "../api/axios";   // <<< using axios instance
+import api from "../api/axios";
 
 const Contact = () => {
   const { theme } = useTheme();
@@ -22,37 +22,31 @@ const Contact = () => {
     message: "",
   });
 
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(""); // "success" | "error" | ""
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // ---------------------------------------------------
-  // SEND MESSAGE (FINALLY CORRECT)
-  // ---------------------------------------------------
   const sendMessage = async () => {
     setLoading(true);
     setStatus("");
 
-    // Validate form before sending
+    // Simple required validation
     if (!form.name || !form.email || !form.phone || !form.message) {
-      alert("❌ Please fill in all fields");
+      alert("❌ Please fill in all fields.");
       setLoading(false);
       return;
     }
 
     try {
       console.log("📤 Sending inquiry:", form);
-      console.log("API Base URL:", import.meta.env.VITE_API_URL);
 
       const res = await api.post("/api/inquiry", form, {
-        headers: {
-          "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" },
       });
 
-      console.log("✅ Response received:", res.data);
+      console.log("✅ Inquiry response:", res.data);
 
       if (res.data.ok) {
         alert("✔ Message sent successfully!");
@@ -64,21 +58,15 @@ const Contact = () => {
       }
     } catch (err) {
       console.error("❌ Inquiry error:", err);
-      console.error("Error response:", err.response?.data);
-      console.error("Error status:", err.response?.status);
-
-      let errorMsg = "Server error. Try again later.";
-      if (err.response?.data?.error) {
-        errorMsg = err.response.data.error;
-      } else if (err.message) {
-        errorMsg = err.message;
-      }
-
-      alert("❌ " + errorMsg);
+      const msg =
+        err?.response?.data?.error ||
+        err?.message ||
+        "Server error. Please try again later.";
+      alert("❌ " + msg);
       setStatus("error");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -98,7 +86,10 @@ const Contact = () => {
               <h1 className="contact-title" style={{ color: colors.textDark }}>
                 Get in Touch
               </h1>
-              <p className="contact-subtitle" style={{ color: colors.textMuted }}>
+              <p
+                className="contact-subtitle"
+                style={{ color: colors.textMuted }}
+              >
                 Connect with us to begin your handwriting transformation journey
               </p>
             </motion.div>
@@ -106,10 +97,9 @@ const Contact = () => {
         </section>
 
         {/* FORM SECTION */}
-        <section className="contact-form-section">
+        <section className="contact-form-section" data-theme={theme}>
           <div className="container">
             <div className="contact-layout">
-
               {/* LEFT - Animation */}
               <motion.div
                 className="contact-animation-wrapper"
@@ -134,7 +124,6 @@ const Contact = () => {
                 </h2>
 
                 <div className="futuristic-form">
-
                   {/* Name */}
                   <div className="input-group-futuristic">
                     <input
@@ -146,7 +135,10 @@ const Contact = () => {
                       placeholder="Full Name"
                       required
                       style={{
-                        background: theme === "dark" ? colors.surface + "60" : colors.background,
+                        background:
+                          theme === "dark"
+                            ? colors.surface + "60"
+                            : colors.background,
                         color: colors.textDark,
                       }}
                     />
@@ -163,7 +155,10 @@ const Contact = () => {
                       placeholder="Phone Number"
                       required
                       style={{
-                        background: theme === "dark" ? colors.surface + "60" : colors.background,
+                        background:
+                          theme === "dark"
+                            ? colors.surface + "60"
+                            : colors.background,
                         color: colors.textDark,
                       }}
                     />
@@ -180,7 +175,10 @@ const Contact = () => {
                       placeholder="Email Address"
                       required
                       style={{
-                        background: theme === "dark" ? colors.surface + "60" : colors.background,
+                        background:
+                          theme === "dark"
+                            ? colors.surface + "60"
+                            : colors.background,
                         color: colors.textDark,
                       }}
                     />
@@ -197,7 +195,10 @@ const Contact = () => {
                       rows="4"
                       required
                       style={{
-                        background: theme === "dark" ? colors.surface + "60" : colors.background,
+                        background:
+                          theme === "dark"
+                            ? colors.surface + "60"
+                            : colors.background,
                         color: colors.textDark,
                       }}
                     />
@@ -216,8 +217,28 @@ const Contact = () => {
                     }}
                   >
                     <Send size={20} />
-                    <span>{loading ? "Transmitting..." : "Transmit Message"}</span>
+                    <span>
+                      {loading ? "Transmitting..." : "Transmit Message"}
+                    </span>
                   </motion.button>
+
+                  {status === "success" && (
+                    <p
+                      className="status-text"
+                      style={{ color: colors.textMuted, marginTop: "10px" }}
+                    >
+                      Thank you! Your inquiry has been received.
+                    </p>
+                  )}
+
+                  {status === "error" && (
+                    <p
+                      className="status-text"
+                      style={{ color: "#ef4444", marginTop: "10px" }}
+                    >
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -225,7 +246,7 @@ const Contact = () => {
         </section>
 
         {/* CONTACT DETAILS */}
-        <section className="contact-details-section">
+        <section className="contact-details-section" data-theme={theme}>
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -240,28 +261,46 @@ const Contact = () => {
 
               <div className="details-grid">
                 {/* Address */}
-                <motion.div className="detail-item" whileHover={{ scale: 1.05, y: -5 }}>
-                  <div className="detail-icon-wrapper" style={{ color: colors.primary }}>
+                <motion.div
+                  className="detail-item"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div
+                    className="detail-icon-wrapper"
+                    style={{ color: colors.primary }}
+                  >
                     <MapPin size={32} />
                   </div>
                   <div className="detail-content">
                     <h3 style={{ color: colors.textDark }}>Address</h3>
                     <p style={{ color: colors.textMuted }}>
-                      Klassic Landmark Apartment,<br />
+                      Klassic Landmark Apartment,
+                      <br />
                       Junnasandara, Bangalore - 560035
                     </p>
                   </div>
                 </motion.div>
 
                 {/* Email */}
-                <motion.div className="detail-item" whileHover={{ scale: 1.05, y: -5 }}>
-                  <div className="detail-icon-wrapper" style={{ color: colors.accent }}>
+                <motion.div
+                  className="detail-item"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div
+                    className="detail-icon-wrapper"
+                    style={{ color: colors.accent }}
+                  >
                     <Mail size={32} />
                   </div>
                   <div className="detail-content">
                     <h3 style={{ color: colors.textDark }}>Email</h3>
                     <p style={{ color: colors.textMuted }}>
-                      <a href="mailto:academywritewell@gmail.com" style={{ color: colors.primary }}>
+                      <a
+                        href="mailto:academywritewell@gmail.com"
+                        style={{ color: colors.primary }}
+                      >
                         academywritewell@gmail.com
                       </a>
                     </p>

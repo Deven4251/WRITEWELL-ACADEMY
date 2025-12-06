@@ -1,44 +1,39 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import Avatar from "../components/Avatar";
-import axios from "axios";
 import { Lightbulb, X, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 import Confetti from "../utils/confetti";
+import api from "../api/axios";
 import "./insights.css";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const galleryItems = [
   {
-    before: "../images/img1.jpg",
-    after: "../images/img2.jpg",
+    before: "/images/img1.jpg",
+    after: "/images/img2.jpg",
     title: "Grade 5 Improvement",
     description: "Remarkable progress in letter formation and spacing",
   },
   {
-    before: "../images/img3.jpg",
-    after: "../images/img5.jpg",
+    before: "/images/img3.jpg",
+    after: "/images/img5.jpg",
     title: "Grade 7 Transformation",
     description:
       "Consistent handwriting style achieved through dedicated practice",
   },
   {
-    before: "../images/tanya.jpg",
-    after: "../images/tanya2.jpg",
+    before: "/images/tanya.jpg",
+    after: "/images/tanya2.jpg",
     title: "Grade 9 Transformation",
     description: "Improved speed and clarity for better exam performance",
   },
   {
-    before:
-      "../images/aniket3rd.jpg",
-    after:
-      "../images/img6after.jpg",
+    before: "/images/aniket-3rd.jpg",   // ensure file names match your public/images
+    after: "/images/img6-after.jpg",
     title: "Grade 11 Transformation",
     description: "Professional handwriting ready for competitive exams",
   },
@@ -56,6 +51,7 @@ const tips = [
 const Insights = () => {
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
+
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [zoomImage, setZoomImage] = useState(null);
   const [feedbackList, setFeedbackList] = useState([]);
@@ -65,8 +61,7 @@ const Insights = () => {
   const [loading, setLoading] = useState(true);
   const mounted = useRef(true);
 
-  const api = axios.create({ baseURL: API_BASE_URL });
-
+  // Load feedback from backend
   const loadFeedback = async () => {
     try {
       const res = await api.get("/api/feedback");
@@ -85,9 +80,12 @@ const Insights = () => {
   useEffect(() => {
     mounted.current = true;
     loadFeedback();
-    return () => (mounted.current = false);
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
+  // Submit new feedback
   const submitFeedback = async () => {
     if (!fbName.trim() || !fbMessage.trim()) return;
     setSubmitting(true);
@@ -113,7 +111,6 @@ const Insights = () => {
 
     try {
       const res = await api.post("/api/feedback", form);
-
       const saved = res.data.feedback || res.data || null;
 
       if (saved && saved._id) {
@@ -124,14 +121,14 @@ const Insights = () => {
         loadFeedback();
       }
     } catch (err) {
-      console.error("❌ Inquiry submit failed:", err);
+      console.error("❌ Feedback submit failed:", err);
       setFeedbackList((s) => s.filter((f) => f._id !== temp._id));
     } finally {
       setSubmitting(false);
     }
   };
 
-
+  // Reaction helpers
   const getUserReactions = () => {
     try {
       return JSON.parse(localStorage.getItem("reactions") || "{}");
@@ -139,7 +136,9 @@ const Insights = () => {
       return {};
     }
   };
+
   const getUserReaction = (id) => getUserReactions()[id] || null;
+
   const setUserReaction = (id, type) => {
     const obj = getUserReactions();
     obj[id] = type;
@@ -154,12 +153,14 @@ const Insights = () => {
     const previous = getUserReaction(id);
     if (previous === type) return;
 
+    // Optimistic UI update
     setFeedbackList((prev) =>
       prev.map((fb) => {
         if (fb._id !== id) return fb;
         const updated = { ...fb };
-        if (previous)
+        if (previous) {
           updated[previous] = Math.max((updated[previous] || 1) - 1, 0);
+        }
         updated[type] = (updated[type] || 0) + 1;
         return updated;
       })
@@ -180,6 +181,7 @@ const Insights = () => {
       await api.post(`/api/feedback/react/${id}`, { type, previous });
     } catch (err) {
       console.error("Reaction error:", err);
+      // Revert UI on error
       setFeedbackList((prev) =>
         prev.map((fb) => {
           if (fb._id !== id) return fb;
@@ -196,7 +198,10 @@ const Insights = () => {
     }
   };
 
-  const goNext = () => setGalleryIndex((g) => (g + 1) % galleryItems.length);
+  // Carousel controls
+  const goNext = () =>
+    setGalleryIndex((g) => (g + 1) % galleryItems.length);
+
   const goPrev = () =>
     setGalleryIndex((g) => (g - 1 + galleryItems.length) % galleryItems.length);
 
@@ -214,7 +219,7 @@ const Insights = () => {
       <Header />
 
       <main className="insights-main" data-theme={theme}>
-        {/* Header */}
+        {/* HERO */}
         <section className="insights-hero">
           <div className="container">
             <motion.div
@@ -236,7 +241,7 @@ const Insights = () => {
           </div>
         </section>
 
-        {/* Tips Section */}
+        {/* TIPS */}
         <section className="tips-section" data-theme={theme}>
           <div className="container">
             <h2 className="section-heading" style={{ color: colors.textDark }}>
@@ -270,7 +275,7 @@ const Insights = () => {
           </div>
         </section>
 
-        {/* Carousel Section */}
+        {/* CAROUSEL */}
         <section className="carousel-section" data-theme={theme}>
           <div className="container">
             <h2
@@ -280,7 +285,6 @@ const Insights = () => {
               Student Transformations
             </h2>
 
-            {/* Static Title and Description */}
             <div className="carousel-static-header">
               <h3
                 className="carousel-title"
@@ -292,7 +296,8 @@ const Insights = () => {
                 className="carousel-description"
                 style={{ color: colors.textMuted }}
               >
-                Witness the remarkable transformations achieved through dedicated practice and expert guidance
+                Witness the remarkable transformations achieved through
+                dedicated practice and expert guidance.
               </p>
             </div>
 
@@ -314,11 +319,12 @@ const Insights = () => {
                             className="image-label"
                             style={{ color: colors.textMuted }}
                           >
-                            {`Slide ${galleryIndex + 1} of ${galleryItems.length}`}
+                            {`Slide ${galleryIndex + 1} of ${galleryItems.length
+                              }`}
                           </p>
                           <motion.img
                             src={galleryItems[galleryIndex].before}
-                            alt={galleryItems[galleryIndex].title + " "}
+                            alt={galleryItems[galleryIndex].title + " - Before"}
                             className="transformation-image"
                             onClick={() =>
                               setZoomImage(galleryItems[galleryIndex].before)
@@ -333,11 +339,12 @@ const Insights = () => {
                             className="image-label"
                             style={{ color: colors.textMuted }}
                           >
-                            {`Slide ${galleryIndex + 1} of ${galleryItems.length}`}
+                            {`Slide ${galleryIndex + 1} of ${galleryItems.length
+                              }`}
                           </p>
                           <motion.img
                             src={galleryItems[galleryIndex].after}
-                            alt={galleryItems[galleryIndex].title + ""}
+                            alt={galleryItems[galleryIndex].title + " - After"}
                             className="transformation-image"
                             onClick={() =>
                               setZoomImage(galleryItems[galleryIndex].after)
@@ -373,9 +380,8 @@ const Insights = () => {
                 {galleryItems.map((_, i) => (
                   <button
                     key={i}
-                    className={`carousel-dot ${
-                      i === galleryIndex ? "active" : ""
-                    }`}
+                    className={`carousel-dot ${i === galleryIndex ? "active" : ""
+                      }`}
                     onClick={() => setGalleryIndex(i)}
                     aria-label={`Go to slide ${i + 1}`}
                     style={{
@@ -389,7 +395,7 @@ const Insights = () => {
           </div>
         </section>
 
-        {/* Zoom Modal */}
+        {/* ZOOM MODAL */}
         <AnimatePresence>
           {zoomImage && (
             <motion.div
@@ -400,7 +406,9 @@ const Insights = () => {
               onClick={() => setZoomImage(null)}
               style={{
                 background:
-                  theme === "dark" ? "rgba(0,0,0,0.9)" : "rgba(0,0,0,0.8)",
+                  theme === "dark"
+                    ? "rgba(0,0,0,0.9)"
+                    : "rgba(0,0,0,0.8)",
               }}
             >
               <motion.img
@@ -421,7 +429,7 @@ const Insights = () => {
           )}
         </AnimatePresence>
 
-        {/* Feedback Section */}
+        {/* FEEDBACK SECTION */}
         <section className="feedback-section" data-theme={theme}>
           <div className="container">
             <div className="feedback-header">
@@ -443,7 +451,11 @@ const Insights = () => {
               <div className="loading-state">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1,
+                    ease: "linear",
+                  }}
                   className="loading-spinner"
                   style={{
                     borderColor: colors.border,
@@ -496,36 +508,43 @@ const Insights = () => {
                             className="feedback-date"
                             style={{ color: colors.textMuted }}
                           >
-                            {new Date(fb.createdAt).toLocaleDateString()}
+                            {fb.createdAt
+                              ? new Date(
+                                fb.createdAt
+                              ).toLocaleDateString()
+                              : ""}
                           </span>
                           <div className="feedback-reactions">
                             <motion.button
                               whileTap={{ scale: 1.2 }}
-                              className={`reaction-btn ${
-                                current === "like" ? "active" : ""
-                              }`}
+                              className={`reaction-btn ${current === "like" ? "active" : ""
+                                }`}
                               onClick={() => addReaction(fb._id, "like")}
-                              style={{ opacity: current === "like" ? 1 : 0.6 }}
+                              style={{
+                                opacity: current === "like" ? 1 : 0.6,
+                              }}
                             >
                               👍 {fb.like || 0}
                             </motion.button>
                             <motion.button
                               whileTap={{ scale: 1.2 }}
-                              className={`reaction-btn ${
-                                current === "love" ? "active" : ""
-                              }`}
+                              className={`reaction-btn ${current === "love" ? "active" : ""
+                                }`}
                               onClick={() => addReaction(fb._id, "love")}
-                              style={{ opacity: current === "love" ? 1 : 0.6 }}
+                              style={{
+                                opacity: current === "love" ? 1 : 0.6,
+                              }}
                             >
                               ❤️ {fb.love || 0}
                             </motion.button>
                             <motion.button
                               whileTap={{ scale: 1.2 }}
-                              className={`reaction-btn ${
-                                current === "wow" ? "active" : ""
-                              }`}
+                              className={`reaction-btn ${current === "wow" ? "active" : ""
+                                }`}
                               onClick={() => addReaction(fb._id, "wow")}
-                              style={{ opacity: current === "wow" ? 1 : 0.6 }}
+                              style={{
+                                opacity: current === "wow" ? 1 : 0.6,
+                              }}
                             >
                               😮 {fb.wow || 0}
                             </motion.button>
@@ -538,7 +557,7 @@ const Insights = () => {
               })}
             </div>
 
-            {/* Feedback Form */}
+            {/* FEEDBACK FORM */}
             <motion.div
               className="feedback-form"
               initial={{ opacity: 0, y: 20 }}

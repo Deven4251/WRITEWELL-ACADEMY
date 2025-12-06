@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { sendInquiry } = require("../controllers/InquiryController");
+const { handleInquiry } = require("../controllers/InquiryController");
 
-router.post("/", sendInquiry);
+router.post("/", handleInquiry);
 
 module.exports = router;
