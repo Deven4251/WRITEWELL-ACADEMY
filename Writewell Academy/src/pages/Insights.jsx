@@ -32,8 +32,8 @@ const galleryItems = [
     description: "Improved speed and clarity for better exam performance",
   },
   {
-    before: "/images/aniket-3rd.jpg",   // ensure file names match your public/images
-    after: "/images/img6-after.jpg",
+    before: "/images/aniket3rd.jpg",   // ensure file names match your public/images
+    after: "/images/img6after.jpg",
     title: "Grade 11 Transformation",
     description: "Professional handwriting ready for competitive exams",
   },
