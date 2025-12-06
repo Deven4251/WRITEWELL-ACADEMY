@@ -46,7 +46,7 @@ app.use("/api/feedback", feedbackRoutes);
 
 // Health check
 app.get("/", (req, res) => {
-  res.send("Writewell Academy Backend Running on Render!");
+  res.send("Writewell Academy Backend Running on vercel!");
 });
 
 // --------------------------------------------------
