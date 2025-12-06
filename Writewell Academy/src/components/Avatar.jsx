@@ -38,7 +38,7 @@ const Avatar = ({ name = "User", size = 64 }) => {
 
       {/* Full name */}
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <div style={{ fontWeight: 700, color: colors.textDark, fontSize: "0.98rem" }}>{name}</div>
+        <div style={{ fontWeight: 700, color: colors.accent, fontSize: "0.98rem" }}>{name}</div>
         <div style={{ fontSize: "0.78rem", color: colors.textMuted, marginTop: 2 }}>{/* optional subtitle (empty) */}</div>
       </div>
     </motion.div>

@@ -9,7 +9,7 @@ const Header = () => {
     const colors = getThemeColors(theme);
 
     return (
-        <> 
+        <>
             <nav className="navbar navbar-expand-sm header-nav sticky-top" data-theme={theme}>
                 <div className="container-fluid">
                     <Link to={"/"} className="navbar-brand d-flex align-items-center gap-3">

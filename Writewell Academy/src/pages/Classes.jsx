@@ -414,7 +414,7 @@ const Classes = () => {
                 <p style={{ color: colors.textMuted, marginBottom: '24px' }}>
                   Only few seats left
                 </p>
-                
+
                 <button
                   className="enroll-btn"
                   onClick={handleclickNow}
