@@ -208,8 +208,8 @@ The backend's primary function is to securely handle contact submissions and col
 
 ```json
 {
-  "name": "Sarah J.",
-  "comment": "The animations are smooth and the UI is very intuitive. Great platform!"
+  "name": "ABC",
+  "comment": "I appreciate XYZ for noticing that His/her handwriting is improving remarkably. The progress is clearly visible, and the effort he is putting in is truly commendable."
 }
 ```
 
