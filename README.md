@@ -151,15 +151,31 @@ npm start
 
 -----
 
-### 📡 API Routes: Inquiry Submission
+That's excellent\! Adding a **Feedback API** route is a great idea for collecting user experience data.
 
-The primary function of the backend is to securely handle contact submissions.
+Here is the updated **API Routes** section, incorporating the new feedback route and maintaining the clean Markdown structure:
+
+-----
+
+### 📡 API Routes: Inquiry & Feedback Submission
+
+The backend's primary function is to securely handle contact submissions and collect user feedback.
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | **POST** | `/api/inquiry` | Submits a new parental inquiry for enrollment. |
+| **POST** | `/api/feedback` | Submits user feedback regarding the platform experience. |
 
-#### Example Request Payload
+#### 1\. Inquiry Submission
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `name` | String | Parent's name. |
+| `email` | String | Parent's email address. |
+| `phone` | String | Parent's contact phone number. |
+| `message` | String | Detailed enrollment query. |
+
+**Example Request Payload**
 
 ```json
 {
@@ -170,7 +186,7 @@ The primary function of the backend is to securely handle contact submissions.
 }
 ```
 
-#### Example Success Response
+**Example Success Response**
 
 ```json
 {
@@ -179,6 +195,32 @@ The primary function of the backend is to securely handle contact submissions.
 }
 ```
 
+-----
+
+#### 2\. Feedback Submission (New)
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `name` | String | User's name (Optional). |
+| `comment` | String | User's detailed comments or suggestions. |
+
+**Example Request Payload**
+
+```json
+{
+  "name": "Sarah J.",
+  "comment": "The animations are smooth and the UI is very intuitive. Great platform!"
+}
+```
+
+**Example Success Response**
+
+```json
+{
+  "success": true,
+  "message": "Feedback submitted successfully"
+}
+```
 -----
 
 ### 🖼️ UI & Animation Gallery
