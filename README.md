@@ -201,7 +201,7 @@ The backend's primary function is to securely handle contact submissions and col
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `name` | String | User's name (Optional). |
+| `name` | String | User's name . |
 | `comment` | String | User's detailed comments or suggestions. |
 
 **Example Request Payload**
