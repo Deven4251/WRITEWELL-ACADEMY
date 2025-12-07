@@ -102,7 +102,7 @@ Follow these steps to get a local copy of the project up and running.
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone [https://github.com/Deven4251/WRITEWELL-ACADEMY.git](https://github.com/Deven4251/WRITEWELL-ACADEMY.git)
+git clone https://github.com/Deven4251/WRITEWELL-ACADEMY.git
 cd WRITEWELL-ACADEMY
 ```
 ⚙️ Environment VariablesBefore running the backend, create a file named .env inside the /server directory and populate it with your configuration:Bash# /server/.env
