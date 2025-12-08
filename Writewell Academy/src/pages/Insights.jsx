@@ -439,12 +439,7 @@ const Insights = () => {
               >
                 Parents Feedback
               </h2>
-              <span
-                className="feedback-count"
-                style={{ color: colors.textMuted }}
-              >
-                {feedbackList.length} entries
-              </span>
+
             </div>
 
             {loading && (
