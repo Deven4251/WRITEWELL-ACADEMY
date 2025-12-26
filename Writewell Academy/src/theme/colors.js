@@ -1,5 +1,5 @@
 // Theme-aware color system
-const getThemeColors = (theme = 'light') => {
+const getThemeColors = (theme = 'dark') => {
   if (theme === 'dark') {
     return {
       primary: '#818cf8', // Lighter indigo for dark mode
@@ -43,7 +43,7 @@ const getThemeColors = (theme = 'light') => {
 };
 
 // Export default for backward compatibility (will use light theme)
-const colors = getThemeColors('light');
+const colors = getThemeColors('dark');
 
 export default colors;
 export { getThemeColors };

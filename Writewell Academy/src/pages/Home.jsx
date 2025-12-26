@@ -131,16 +131,6 @@ const Home = () => {
                 }}
               >
                 {/* Tagline */}
-                <motion.div
-                  variants={randomFade}
-                  custom={1}
-                  className="hero-tagline"
-                  style={{ color: colors.primary }}
-                >
-                  <Sparkles className="me-2" size={20} />
-                  Transform your handwriting beautifully
-                </motion.div>
-
                 {/* Header */}
                 <motion.h1
                   variants={randomFade}
@@ -257,32 +247,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Did You Know Section */}
-      <section className="info-section" data-theme={theme}>
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="info-box"
-            style={{
-              borderLeft: `4px solid ${colors.accent}`,
-              background: theme === 'dark' ? colors.surface + '40' : colors.background,
-            }}
-          >
-            <h5 style={{ color: colors.textDark, marginBottom: '12px' }}>Did You Know?</h5>
-            <p className="info-text" style={{ color: colors.textMuted }}>
-              Beautiful handwriting boosts memory, improves focus, and increases
-              exam performance by up to <strong style={{ color: colors.primary }}>40%</strong>.
-            </p>
-            <p className="info-text" style={{ color: colors.textDark }}>
-              Writing is not just an art — it's a superpower! ✍️✨
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
+      
       {/* Benefits Section */}
       <section className="benefits-section" data-theme={theme}>
         <div className="container">

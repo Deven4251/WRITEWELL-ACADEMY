@@ -8,7 +8,6 @@ import { Mail, MapPin, Send } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 import "./contact.css";
-import MapComponent from "../components/mapcomponent";
 import api from "../api/axios";
 
 const Contact = () => {
@@ -74,27 +73,6 @@ const Contact = () => {
       <Header />
 
       <main className="contact-main" data-theme={theme}>
-        {/* HERO */}
-        <section className="contact-hero">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
-              <h1 className="contact-title" style={{ color: colors.textDark }}>
-                Get in Touch
-              </h1>
-              <p
-                className="contact-subtitle"
-                style={{ color: colors.textMuted }}
-              >
-                Connect with us to begin your handwriting transformation journey
-              </p>
-            </motion.div>
-          </div>
-        </section>
 
         {/* FORM SECTION */}
         <section className="contact-form-section" data-theme={theme}>
@@ -113,14 +91,14 @@ const Contact = () => {
 
               {/* RIGHT - Form */}
               <motion.div
-                className="contact-form-wrapper"
+                className="contact-form-wrapper text-center"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
                 <h2 className="form-title" style={{ color: colors.textDark }}>
-                  Send us a Message
+                  Get a Quote
                 </h2>
 
                 <div className="futuristic-form">
@@ -258,59 +236,29 @@ const Contact = () => {
               <h2 className="details-title" style={{ color: colors.textDark }}>
                 Contact Information
               </h2>
-
-              <div className="details-grid">
-                {/* Address */}
-                <motion.div
-                  className="detail-item"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={{ duration: 0.3 }}
+              <motion.div
+                className="detail-item"
+                whileHover={{ scale: 1.05, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div
+                  className="detail-icon-wrapper"
+                  style={{ color: colors.accent }}
                 >
-                  <div
-                    className="detail-icon-wrapper"
-                    style={{ color: colors.primary }}
-                  >
-                    <MapPin size={32} />
-                  </div>
-                  <div className="detail-content">
-                    <h3 style={{ color: colors.textDark }}>Address</h3>
-                    <p style={{ color: colors.textMuted }}>
-                      Klassic Landmark Apartment,
-                      <br />
-                      Junnasandara, Bangalore - 560035
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Email */}
-                <motion.div
-                  className="detail-item"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div
-                    className="detail-icon-wrapper"
-                    style={{ color: colors.accent }}
-                  >
-                    <Mail size={32} />
-                  </div>
-                  <div className="detail-content">
-                    <h3 style={{ color: colors.textDark }}>Email</h3>
-                    <p style={{ color: colors.textMuted }}>
-                      <a
-                        href="mailto:academywritewell@gmail.com"
-                        style={{ color: colors.primary }}
-                      >
-                        academywritewell@gmail.com
-                      </a>
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="map-wrapper">
-                <MapComponent />
-              </div>
+                  <Mail size={32} />
+                </div>
+                <div className="detail-content">
+                  <h3 style={{ color: colors.textDark }}>Email</h3>
+                  <p style={{ color: colors.textMuted }}>
+                    <a
+                      href="mailto:academywritewell@gmail.com"
+                      style={{ color: colors.primary }}
+                    >
+                      academywritewell@gmail.com
+                    </a>
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </section>
