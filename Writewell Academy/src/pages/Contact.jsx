@@ -267,7 +267,7 @@ const Contact = () => {
                       href="mailto:academywritewell@gmail.com"
                       style={{ color: colors.primary }}
                     >
-                      writewellAcademy mail
+                      academywritewell@gmail.com
                     </a>
                   </p>
                 </div>
