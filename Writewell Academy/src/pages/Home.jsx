@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { PenLine, Sparkles, Feather, Wand2, ArrowRight } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
+import FloatingWhatsAppButton from "../components/WhatsappButton";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 
@@ -118,6 +119,7 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
+
       <section className="hero-section" data-theme={theme}>
         <div className="container">
           <div className="row align-items-center min-vh-75">
@@ -247,7 +249,7 @@ const Home = () => {
         </div>
       </section>
 
-      
+
       {/* Benefits Section */}
       <section className="benefits-section" data-theme={theme}>
         <div className="container">
@@ -291,7 +293,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+      <FloatingWhatsAppButton />
       <Footer />
     </>
   );

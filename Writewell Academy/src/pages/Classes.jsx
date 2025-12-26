@@ -15,6 +15,7 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 import "./classes.css";
+import FloatingWhatsAppButton from "../components/WhatsappButton";
 
 /* ---------------- SMALL STAT ---------------- */
 const SmallStat = ({ label, value, colors }) => (
@@ -236,6 +237,7 @@ const Classes = () => {
       </section>
 
       {/* Main Content */}
+
       <main className="classes-main" data-theme={theme}>
         <div className="container">
           <div className="row">
@@ -430,7 +432,7 @@ const Classes = () => {
           </div>
         </div>
       </main>
-
+      <FloatingWhatsAppButton />
       <Footer />
     </>
   );

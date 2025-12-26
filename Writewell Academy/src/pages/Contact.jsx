@@ -9,6 +9,7 @@ import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 import "./contact.css";
 import api from "../api/axios";
+import FloatingWhatsAppButton from "../components/WhatsappButton";
 
 const Contact = () => {
   const { theme } = useTheme();
@@ -71,9 +72,7 @@ const Contact = () => {
   return (
     <>
       <Header />
-
       <main className="contact-main" data-theme={theme}>
-
         {/* FORM SECTION */}
         <section className="contact-form-section" data-theme={theme}>
           <div className="container">
@@ -234,8 +233,22 @@ const Contact = () => {
               className="contact-details"
             >
               <h2 className="details-title" style={{ color: colors.textDark }}>
-                Contact Information
+                Get in Touch
               </h2>
+
+              <p
+                className="details-subtitle"
+                style={{
+                  color: colors.textMuted,
+                  maxWidth: "555px",
+                  margin: "0 auto 35px",
+                  textAlign: "center",
+                }}
+              >
+              Schedule a free consultation or learn more about our handwriting classes
+              </p>
+
+              {/* EMAIL */}
               <motion.div
                 className="detail-item"
                 whileHover={{ scale: 1.05, y: -5 }}
@@ -254,7 +267,32 @@ const Contact = () => {
                       href="mailto:academywritewell@gmail.com"
                       style={{ color: colors.primary }}
                     >
-                      academywritewell@gmail.com
+                      writewellAcademy mail
+                    </a>
+                  </p>
+                </div>
+              </motion.div>
+                <br />
+              {/* PHONE */}
+              <motion.div
+                className="detail-item"
+                whileHover={{ scale: 1.05, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div
+                  className="detail-icon-wrapper"
+                  style={{ color: colors.accent }}
+                >
+                  <Send size={32} />
+                </div>
+                <div className="detail-content">
+                  <h3 style={{ color: colors.textDark }}>Phone</h3>
+                  <p style={{ color: colors.textMuted }}>
+                    <a
+                      href="tel:+919980799621"
+                      style={{ color: colors.primary }}
+                    >
+                      +91 9980799621
                     </a>
                   </p>
                 </div>
@@ -262,8 +300,9 @@ const Contact = () => {
             </motion.div>
           </div>
         </section>
-      </main>
 
+      </main>
+      <FloatingWhatsAppButton />
       <Footer />
     </>
   );

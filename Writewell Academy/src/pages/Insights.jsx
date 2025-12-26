@@ -10,6 +10,7 @@ import { getThemeColors } from "../theme/colors";
 import Confetti from "../utils/confetti";
 import api from "../api/axios";
 import "./insights.css";
+import FloatingWhatsAppButton from "../components/WhatsappButton";
 
 const galleryItems = [
   {
@@ -619,7 +620,7 @@ const Insights = () => {
           </div>
         </section>
       </main>
-
+      <FloatingWhatsAppButton />
       <Footer />
     </>
   );
