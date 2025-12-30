@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import Header from "../components/Header";
+
 import ContactAnimation from "../components/ContactAnimation";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
@@ -71,7 +71,7 @@ const Contact = () => {
 
   return (
     <>
-      <Header />
+
       <main className="contact-main" data-theme={theme}>
         {/* FORM SECTION */}
         <section className="contact-form-section" data-theme={theme}>
@@ -300,9 +300,8 @@ const Contact = () => {
             </motion.div>
           </div>
         </section>
-
       </main>
-      <FloatingWhatsAppButton />
+      
       <Footer />
     </>
   );

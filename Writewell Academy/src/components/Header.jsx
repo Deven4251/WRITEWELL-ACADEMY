@@ -1,7 +1,7 @@
-import './common.css'
-import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
+import "./common.css";
+import { Link } from "react-scroll";
 import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 import { getThemeColors } from "../theme/colors";
 
 const Header = () => {
@@ -9,82 +9,115 @@ const Header = () => {
     const colors = getThemeColors(theme);
 
     return (
-        <>
-            <nav className="navbar navbar-expand-sm header-nav sticky-top" data-theme={theme}>
-                <div className="container-fluid">
-                    <Link to={"/"} className="navbar-brand d-flex align-items-center gap-3">
-                        <img
-                            className="img-fluid logo"
-                            src="LOGO.jpg"
-                            alt="logo"
-                        />
-                        <h4
-                            className="mb-0 header-title"
-                            style={{
-                                background: colors.gradient.primary,
-                                fontWeight: 700,
-                                fontSize: "1.5rem"
-                            }}
-                        >
-                            Writewell Academy
-                        </h4>
-                    </Link>
+        <nav
+            className="navbar navbar-expand-sm header-nav sticky-top"
+            data-theme={theme}
+            style={{
+                backgroundColor: colors.background,
+                borderBottom: `1px solid ${colors.border}`,
+            }}
+        >
+            <div className="container-fluid">
+                {/* Logo / Brand */}
+                <Link
+                    to="home"
+                    smooth
+                    duration={500}
+                    className="navbar-brand d-flex align-items-center gap-3"
+                    style={{ cursor: "pointer" }}
+                >
+                    <img className="img-fluid logo" src="LOGO.jpeg" alt="logo" />
 
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style={{ border: 'none' }}>
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+                    <h4
+                        className="mb-0 header-title"
+                        style={{
+                            background: colors.gradient.primary,
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            fontWeight: 700,
+                            fontSize: "1.5rem",
+                        }}
+                    >
+                        Handwriting Champions
+                    </h4>
+                </Link>
 
-                    <div className="collapse navbar-collapse justify-content-end" id="nav">
-                        <ul className="navbar-nav ul d-flex align-items-center">
-                            <li className="nav-item">
-                                <Link to="/" className="nav-link">Home</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/Classes" className="nav-link">Classes</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/Insights" className="nav-link">Insights</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/Contact" className="nav-link">Contact</Link>
-                            </li>
-                            <li className="nav-item">
-                                <button
-                                    className="theme-toggle"
-                                    onClick={toggleTheme}
-                                    aria-label="Toggle theme"
+                {/* Mobile Toggle */}
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#nav"
+                    aria-controls="nav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    style={{
+                        border: `1px solid ${colors.border}`,
+                    }}
+                >
+                    <span
+                        className="navbar-toggler-icon"
+                        style={{
+                            filter: theme === "dark" ? "invert(1)" : "none",
+                        }}
+                    />
+                </button>
+
+                {/* Nav Links */}
+                <div className="collapse navbar-collapse justify-content-end" id="nav">
+                    <ul className="navbar-nav d-flex align-items-center">
+                        {[
+                            { to: "home", label: "Home" },
+                            { to: "classes", label: "Classes" },
+                            { to: "insights", label: "Insights" },
+                            { to: "testimonials", label: "Testimonials" },
+                            { to: "contact", label: "Contact" },
+                        ].map((item) => (
+                            <li className="nav-item" key={item.to}>
+                                <Link
+                                    to={item.to}
+                                    spy
+                                    smooth
+                                    offset={-70}
+                                    duration={500}
+                                    className="nav-link"
                                     style={{
-                                        background: 'transparent',
-                                        border: `1px solid ${colors.border}`,
-                                        borderRadius: '8px',
-                                        padding: '8px 12px',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        cursor: "pointer",
                                         color: colors.textDark,
-                                        transition: 'all 0.3s ease',
-                                        marginLeft: '16px'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.target.style.background = colors.primary + '20';
-                                        e.target.style.borderColor = colors.primary;
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.background = 'transparent';
-                                        e.target.style.borderColor = colors.border;
                                     }}
                                 >
-                                    {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-                                </button>
+                                    {item.label}
+                                </Link>
                             </li>
-                        </ul>
-                    </div>
+                        ))}
+
+                        {/* Theme Toggle */}
+                        <li className="nav-item ms-3">
+                            <button
+                                className="theme-toggle"
+                                onClick={toggleTheme}
+                                aria-label="Toggle theme"
+                                style={{
+                                    background: "transparent",
+                                    border: `1px solid ${colors.border}`,
+                                    borderRadius: "8px",
+                                    padding: "8px 12px",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: colors.textDark,
+                                    transition: "all 0.3s ease",
+                                }}
+                            >
+                                {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </>
+            </div>
+        </nav>
     );
 };
-
 
 export default Header;

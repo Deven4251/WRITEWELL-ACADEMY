@@ -10,6 +10,8 @@ import FloatingWhatsAppButton from "../components/WhatsappButton";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 
+
+
 // Random stagger generator
 const randomDelay = (min = 0.08, max = 0.35) => {
   return Math.random() * (max - min) + min;
@@ -112,6 +114,10 @@ const Home = () => {
       title: "Strengthens Motor Skills",
       description: "Proper writing posture and pen control strengthen finger muscles and improve coordination for smoother handwriting.",
     },
+    {
+      title: "Encourages Clear Thinking",
+      description: "Writing by hand helps students organize thoughts logically, improve comprehension, and express ideas more effectively."
+    },
   ];
 
   return (
@@ -120,11 +126,11 @@ const Home = () => {
 
       {/* Hero Section */}
 
-      <section className="hero-section" data-theme={theme}>
-        <div className="container">
-          <div className="row align-items-center min-vh-75">
+      <section className="hero-section d-flex flex-column" data-theme={theme}>
+        <div className="container m-5 p-2">
+          <div className="row align-items-center ">
             {/* LEFT SIDE CONTENT */}
-            <div className="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
+            <div className="col-md-8 text-center text-lg-start mb-5 mb-lg-0">
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -140,7 +146,8 @@ const Home = () => {
                   className="hero-title"
                   style={{ color: colors.textDark }}
                 >
-                  Welcome to Writewell Academy
+                Welcome to
+                 Handwriting champions
                 </motion.h1>
 
                 {/* Underline */}
@@ -160,7 +167,7 @@ const Home = () => {
                   style={{ color: colors.textDark }}
                 >
                   <WordByWord
-                    text="Handwriting is more than lines on paper — it's your personality, clarity, and confidence. At Writewell Academy, we help students master beautiful scripts through mindful writing practice."
+                    text="Your handwriting defines your clarity and confidence. We train students to write beautifully through structured, mindful practice."
                     delay={110}
                   />
                 </motion.div>
@@ -172,7 +179,7 @@ const Home = () => {
                   style={{ color: colors.textMuted }}
                 >
                   <WordByWord
-                    text="Learn proper grip, posture, pen control, and structured drills that build rhythm and muscle memory. Our handwriting sessions transform messy writing into clean, confident, elegant strokes—perfect for students, teachers, and competitive exam aspirants."
+                    text="Master grip, posture, and pen control with focused drills that build strong writing habits. We transform untidy handwriting into clean, confident strokes."
                     delay={85}
                   />
                 </motion.div>
@@ -216,7 +223,7 @@ const Home = () => {
             </div>
 
             {/* RIGHT SIDE IMAGE */}
-            <div className="col-lg-6 text-center">
+            <div className="col-md-4 text-center">
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -224,7 +231,7 @@ const Home = () => {
                 className="hero-image-wrapper"
               >
                 <img
-                  src="./LOGO.jpg"
+                  src="./LOGO.jpeg"
                   alt="Writewell Academy Logo"
                   className="hero-logo"
                 />
@@ -247,12 +254,14 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
 
 
-      {/* Benefits Section */}
-      <section className="benefits-section" data-theme={theme}>
-        <div className="container">
+<br />
+<br />
+<br />
+<br />
+
+        <div className="container pb-5">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -266,7 +275,7 @@ const Home = () => {
             <div
               className="section-divider"
               style={{ background: colors.gradient.primary }}
-            ></div>
+            />
           </motion.div>
 
           <div className="benefits-list">
@@ -278,23 +287,21 @@ const Home = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="benefit-item"
-                style={{
-                  borderBottom: index < benefits.length - 1 ? `1px solid ${colors.border}` : 'none',
-                }}
               >
-                <h3 className="benefit-title" style={{ color: colors.textDark }}>
+                <h3 className="benefit-title">
                   ✨ {benefit.title}
                 </h3>
-                <p className="benefit-description" style={{ color: colors.textMuted }}>
+                <p className="benefit-description">
                   {benefit.description}
                 </p>
               </motion.div>
             ))}
           </div>
         </div>
+
       </section>
       <FloatingWhatsAppButton />
-      <Footer />
+
     </>
   );
 };

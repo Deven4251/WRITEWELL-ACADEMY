@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,8 +19,12 @@ import FloatingWhatsAppButton from "../components/WhatsappButton";
 /* ---------------- SMALL STAT ---------------- */
 const SmallStat = ({ label, value, colors }) => (
   <div className="stat-item">
-    <div className="stat-label" style={{ color: colors.textMuted }}>{label}</div>
-    <div className="stat-value" style={{ color: colors.textDark }}>{value}</div>
+    <div className="stat-label" style={{ color: colors.textMuted }}>
+      {label}
+    </div>
+    <div className="stat-value" style={{ color: colors.textDark }}>
+      {value}
+    </div>
   </div>
 );
 
@@ -41,30 +44,64 @@ const Classes = () => {
   ];
 
   const features = [
-    { title: "15+ Years of Experience", desc: "Professional handwriting expertise for every age group.", icon: <Sparkles size={28} /> },
-    { title: "1000+ Students Trained", desc: "Consistent results backed by real student progress.", icon: <PenLine size={28} /> },
-    { title: "Small Batch Size", desc: "Every child gets dedicated attention and corrections.", icon: <Feather size={28} /> },
-    { title: "Personalized Techniques", desc: "Unique writing style analysis and custom improvements.", icon: <Wand2 size={28} /> },
-    { title: "Safe & Supportive Environment", desc: "Encouraging and positive learning atmosphere.", icon: <Sparkles size={28} /> },
+    {
+      title: "15+ Years of Experience",
+      desc: "Professional handwriting expertise for every age group.",
+      icon: <Sparkles size={28} />,
+    },
+    {
+      title: "100+ Students Trained",
+      desc: "Consistent results backed by real student progress.",
+      icon: <PenLine size={28} />,
+    },
+    {
+      title: "Small Batch Size",
+      desc: "Every child gets dedicated attention and corrections.",
+      icon: <Feather size={28} />,
+    },
+    {
+      title: "Personalized Techniques",
+      desc: "Unique writing style analysis and custom improvements.",
+      icon: <Wand2 size={28} />,
+    },
+    {
+      title: "Safe & Supportive Environment",
+      desc: "Encouraging and positive learning atmosphere.",
+      icon: <Sparkles size={28} />,
+    },
   ];
 
   const mistakes = [
-    { problem: "❌ Uneven Letter Size", fix: "✔ Height drills", result: "✨ Consistent letters" },
-    { problem: "❌ Words Too Close", fix: "✔ Spacing sheets", result: "✨ Clear readability" },
-    { problem: "❌ Wrong Grip / Pressure", fix: "✔ Grip correction", result: "✨ Smooth writing" },
-    { problem: "❌ Misaligned Letters", fix: "✔ Baseline practice", result: "✨ Balanced writing" }
+    {
+      problem: "❌ Uneven Letter Size",
+      fix: "✔ Height drills",
+      result: "✨ Consistent letters",
+    },
+    {
+      problem: "❌ Words Too Close",
+      fix: "✔ Spacing sheets",
+      result: "✨ Clear readability",
+    },
+    {
+      problem: "❌ Wrong Grip / Pressure",
+      fix: "✔ Grip correction",
+      result: "✨ Smooth writing",
+    },
+    {
+      problem: "❌ Misaligned Letters",
+      fix: "✔ Baseline practice",
+      result: "✨ Balanced writing",
+    },
   ];
 
   const sessionStats = [
     { label: "Program", value: "Handwriting Mastery" },
     { label: "Frequency", value: "2 sessions/week" },
-    { label: "Duration", value: "45 min/session" }
+    { label: "Duration", value: "45 min/session" },
   ];
 
   return (
     <>
-      <Header />
-
       {/* Hero Section */}
       <section className="classes-hero" data-theme={theme}>
         <div className="container">
@@ -94,16 +131,20 @@ const Classes = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <h1 className="classes-title" style={{ color: colors.textDark }}>
-                Writewell Classes
+                Class details
               </h1>
-              <p className="classes-subtitle" style={{ color: colors.textMuted }}>
-                Personalized handwriting improvement in small offline batches — Hindi & English.
+              <p
+                className="classes-subtitle"
+                style={{ color: colors.textMuted }}
+              >
+                Personalized handwriting improvement in small offline batches —
+                Hindi & English.
               </p>
               <div className="classes-stats">
                 {[
                   { label: "Program", value: "Handwriting Mastery" },
                   { label: "Duration", value: "6 months" },
-                  { label: "Session", value: "45 min/session" }
+                  { label: "Session", value: "45 min/session" },
                 ].map((stat, idx) => (
                   <motion.div
                     key={idx}
@@ -115,15 +156,22 @@ const Classes = () => {
                       duration: 0.4,
                       delay: 0.4 + idx * 0.1,
                       type: "spring",
-                      stiffness: 200
+                      stiffness: 200,
                     }}
                     whileHover={{ scale: 1.05, y: -3 }}
                     style={{
-                      background: theme === 'dark' ? colors.surface + '80' : colors.background,
-                      border: `1px solid ${colors.border}`
+                      background:
+                        theme === "dark"
+                          ? colors.surface + "80"
+                          : colors.background,
+                      border: `1px solid ${colors.border}`,
                     }}
                   >
-                    <SmallStat label={stat.label} value={stat.value} colors={colors} />
+                    <SmallStat
+                      label={stat.label}
+                      value={stat.value}
+                      colors={colors}
+                    />
                   </motion.div>
                 ))}
               </div>
@@ -172,11 +220,20 @@ const Classes = () => {
                 <h3 className="teacher-name" style={{ color: colors.textDark }}>
                   Jyoti Tiwari
                 </h3>
-                <p className="teacher-qualification" style={{ color: colors.textMuted }}>
+                <p
+                  className="teacher-qualification"
+                  style={{ color: colors.textMuted }}
+                >
                   M.Sc & B.Ed — 15+ yrs experience
                 </p>
-                <p className="teacher-description" style={{ color: colors.textMuted }}>
-                  Expert in grip correction, letter formation, spacing, alignment, and handwriting speed—skilled in identifying individual writing issues and providing personalized techniques.
+                <p
+                  className="teacher-description"
+                  style={{ color: colors.textMuted }}
+                >
+                  Expert in grip correction, letter formation, spacing,
+                  alignment, and handwriting speed—skilled in identifying
+                  individual writing issues and providing personalized
+                  techniques.
                 </p>
               </div>
             </div>
@@ -195,7 +252,7 @@ const Classes = () => {
             className="text-center mb-5"
           >
             <h2 className="section-title" style={{ color: colors.textDark }}>
-              Why Choose Writewell Classes?
+              Why Choose Handwriting champions?
             </h2>
             <div
               className="section-divider"
@@ -216,17 +273,29 @@ const Classes = () => {
                   delay: index * 0.1,
                 }}
                 style={{
-                  borderBottom: index < features.length - 1 ? `1px solid ${colors.border}` : 'none',
+                  borderBottom:
+                    index < features.length - 1
+                      ? `1px solid ${colors.border}`
+                      : "none",
                 }}
               >
-                <div className="feature-icon-wrapper" style={{ color: colors.primary }}>
+                <div
+                  className="feature-icon-wrapper"
+                  style={{ color: colors.primary }}
+                >
                   {item.icon}
                 </div>
                 <div className="feature-content">
-                  <h3 className="feature-title" style={{ color: colors.textDark }}>
+                  <h3
+                    className="feature-title"
+                    style={{ color: colors.textDark }}
+                  >
                     {item.title}
                   </h3>
-                  <p className="feature-desc" style={{ color: colors.textMuted }}>
+                  <p
+                    className="feature-desc"
+                    style={{ color: colors.textMuted }}
+                  >
                     {item.desc}
                   </p>
                 </div>
@@ -252,7 +321,10 @@ const Classes = () => {
                 >
                   <div className="section-header">
                     <Clock size={24} style={{ color: colors.secondary }} />
-                    <h3 className="section-heading" style={{ color: colors.textDark }}>
+                    <h3
+                      className="section-heading"
+                      style={{ color: colors.textDark }}
+                    >
                       Session Details
                     </h3>
                   </div>
@@ -270,11 +342,18 @@ const Classes = () => {
                         }}
                         whileHover={{ scale: 1.05 }}
                         style={{
-                          background: theme === 'dark' ? colors.surface + '40' : colors.background,
-                          border: `1px solid ${colors.border}`
+                          background:
+                            theme === "dark"
+                              ? colors.surface + "40"
+                              : colors.background,
+                          border: `1px solid ${colors.border}`,
                         }}
                       >
-                        <SmallStat label={stat.label} value={stat.value} colors={colors} />
+                        <SmallStat
+                          label={stat.label}
+                          value={stat.value}
+                          colors={colors}
+                        />
                       </motion.div>
                     ))}
                   </div>
@@ -289,7 +368,10 @@ const Classes = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                 >
-                  <h3 className="section-heading" style={{ color: colors.textDark }}>
+                  <h3
+                    className="section-heading"
+                    style={{ color: colors.textDark }}
+                  >
                     Handwriting Problems & Fixes
                   </h3>
                   <div className="mistakes-list">
@@ -305,17 +387,29 @@ const Classes = () => {
                           delay: index * 0.1,
                         }}
                         style={{
-                          borderBottom: index < mistakes.length - 1 ? `1px solid ${colors.border}` : 'none',
+                          borderBottom:
+                            index < mistakes.length - 1
+                              ? `1px solid ${colors.border}`
+                              : "none",
                         }}
                         whileHover={{ x: 8 }}
                       >
-                        <div className="mistake-problem" style={{ color: colors.textDark }}>
+                        <div
+                          className="mistake-problem"
+                          style={{ color: colors.textDark }}
+                        >
                           {item.problem}
                         </div>
-                        <div className="mistake-fix" style={{ color: colors.accent }}>
+                        <div
+                          className="mistake-fix"
+                          style={{ color: colors.accent }}
+                        >
                           {item.fix}
                         </div>
-                        <div className="mistake-result" style={{ color: colors.textMuted }}>
+                        <div
+                          className="mistake-result"
+                          style={{ color: colors.textMuted }}
+                        >
                           {item.result}
                         </div>
                       </motion.div>
@@ -332,14 +426,21 @@ const Classes = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                 >
-                  <h3 className="section-heading" style={{ color: colors.textDark }}>
+                  <h3
+                    className="section-heading"
+                    style={{ color: colors.textDark }}
+                  >
                     Batch Timings (Offline)
                   </h3>
                   <div className="timings-table-wrapper">
                     <table className="timings-table">
                       <thead>
-                        <tr style={{ borderBottom: `2px solid ${colors.border}` }}>
-                          <th style={{ color: colors.textMuted }}>Batch (DAYS)</th>
+                        <tr
+                          style={{ borderBottom: `2px solid ${colors.border}` }}
+                        >
+                          <th style={{ color: colors.textMuted }}>
+                            Batch (DAYS)
+                          </th>
                           <th style={{ color: colors.textMuted }}>Time</th>
                         </tr>
                       </thead>
@@ -353,12 +454,17 @@ const Classes = () => {
                             transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
                             whileHover={{ x: 5 }}
                             style={{
-                              borderBottom: i < batchTimings.length - 1 ? `1px solid ${colors.border}` : 'none',
-                              color: colors.textDark
+                              borderBottom:
+                                i < batchTimings.length - 1
+                                  ? `1px solid ${colors.border}`
+                                  : "none",
+                              color: colors.textDark,
                             }}
                           >
                             <td>{b.batch}</td>
-                            <td style={{ color: colors.textMuted }}>{b.time}</td>
+                            <td style={{ color: colors.textMuted }}>
+                              {b.time}
+                            </td>
                           </motion.tr>
                         ))}
                       </tbody>
@@ -375,7 +481,10 @@ const Classes = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
                 >
-                  <h3 className="section-heading" style={{ color: colors.textDark }}>
+                  <h3
+                    className="section-heading"
+                    style={{ color: colors.textDark }}
+                  >
                     NEWS REGARDING ONLINE BATCH
                   </h3>
                   <p
@@ -383,16 +492,19 @@ const Classes = () => {
                     style={{
                       color: colors.textMuted,
                       borderLeft: `4px solid ${colors.accent}`,
-                      paddingLeft: '20px'
+                      paddingLeft: "20px",
                     }}
                   >
-                   <b>To learn more about the online batch, feel free to contact us through the Contact page.</b> <br/>
-                   Enrollment is almost full — grab your seat while you still can.
-                   <br/>
+                    <b>
+                      To learn more about the online batch, feel free to contact
+                      us through the Contact page.
+                    </b>{" "}
+                    <br />
+                    Enrollment is almost full — grab your seat while you still
+                    can.
+                    <br />
                   </p>
-
                 </motion.div>
-
               </section>
             </div>
 
@@ -405,7 +517,10 @@ const Classes = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
                 style={{
-                  background: theme === 'dark' ? colors.surface + '60' : colors.background,
+                  background:
+                    theme === "dark"
+                      ? colors.surface + "60"
+                      : colors.background,
                   border: `2px solid ${colors.primary}`,
                 }}
               >
@@ -413,7 +528,7 @@ const Classes = () => {
                   <h4 style={{ color: colors.textDark }}>Seats Filling Fast</h4>
                   <CheckCircle size={28} style={{ color: colors.primary }} />
                 </div>
-                <p style={{ color: colors.textMuted, marginBottom: '24px' }}>
+                <p style={{ color: colors.textMuted, marginBottom: "24px" }}>
                   Only few seats left
                 </p>
 
@@ -422,7 +537,7 @@ const Classes = () => {
                   onClick={handleclickNow}
                   style={{
                     background: colors.gradient.primary,
-                    color: '#fff',
+                    color: "#fff",
                   }}
                 >
                   Book Now
@@ -433,7 +548,6 @@ const Classes = () => {
         </div>
       </main>
       <FloatingWhatsAppButton />
-      <Footer />
     </>
   );
 };

@@ -1,0 +1,19 @@
+/* Ensure the page scrolls smoothly when clicking links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Make each section at least the height of the screen */
+section {
+  min-height: 100vh;
+  padding: 80px 20px; /* Space for a sticky navbar */
+  display: flex;
+  flex-direction: column;
+}
+
+/* If you want the "Snap" effect where it locks to sections */
+.main-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}

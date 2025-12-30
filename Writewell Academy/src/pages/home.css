@@ -27,7 +27,7 @@
 /* Hero Section */
 .hero-section {
 
-  min-height: 75vh;
+  min-height: 85vh;
   display: flex;
   align-items: center;
   transition: background 0.3s ease;
@@ -53,14 +53,16 @@
 }
 
 .hero-title {
+
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
   margin-bottom: 16px;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+
 }
 
 [data-theme="dark"] .hero-title {
@@ -252,5 +254,120 @@
 
   .benefit-item {
     padding: 32px 0;
+  }
+}
+
+
+.view-benefits-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--accent-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.view-benefits-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+.view-benefits-btn {
+  color: var(--primary);
+}
+
+
+.benefits-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .benefits-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefit-item {
+  padding: 24px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.benefit-title {
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.benefit-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+
+.containers{
+  width: 500px;
+}
+/* HERO TITLE */
+.hero-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.hero-title-accent {
+  display: inline-block;
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* PARAGRAPHS */
+.hero-text-primary {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin-top: 28px;
+}
+
+.hero-text-secondary {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+/* TABLET */
+@media (max-width: 992px) {
+  .hero-title {
+    font-size: 2.6rem;
+    text-align: center;
+  }
+
+  .hero-text-primary,
+  .hero-text-secondary {
+    text-align: center;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 2.1rem;
+    line-height: 1.25;
+  }
+
+  .hero-text-primary {
+    font-size: 1.05rem;
+  }
+
+  .hero-text-secondary {
+    font-size: 0.95rem;
   }
 }

@@ -19,7 +19,13 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
 }
+
+
+
 
 [data-theme="dark"] .classes-title {
   background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
