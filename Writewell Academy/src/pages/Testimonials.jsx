@@ -172,9 +172,6 @@ const Testimonials = () => {
                                     <div className="testimonial-left">
                                         <div className="avatar-wrap">
                                             <Avatar name={fb.name} size={56} />
-                                            <span className="avatar-badge">
-                                                {fb.name?.slice(0, 2).toUpperCase()}
-                                            </span>
                                         </div>
 
                                         <div className="testimonial-content">
