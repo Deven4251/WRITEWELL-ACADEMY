@@ -146,8 +146,8 @@ const Home = () => {
                   className="hero-title"
                   style={{ color: colors.textDark }}
                 >
-                Welcome to
-                 Handwriting champions
+                  Welcome to
+                  Handwriting champions
                 </motion.h1>
 
                 {/* Underline */}
@@ -163,25 +163,25 @@ const Home = () => {
                 <motion.div
                   variants={randomFade}
                   custom={3}
-                  className="hero-text-cursive"
+                  className="hero-text"
                   style={{ color: colors.textDark }}
                 >
-                  <WordByWord
-                    text="Your handwriting defines your clarity and confidence. We train students to write beautifully through structured, mindful practice."
-                    delay={110}
-                  />
-                </motion.div>
-
-                <motion.div
-                  variants={randomFade}
-                  custom={4}
-                  className="hero-text"
-                  style={{ color: colors.textMuted }}
-                >
-                  <WordByWord
-                    text="Master grip, posture, and pen control with focused drills that build strong writing habits. We transform untidy handwriting into clean, confident strokes."
-                    delay={85}
-                  />
+                  <motion.div
+                    variants={randomFade}
+                    custom={3}
+                    className="hero-description-container"
+                    style={{ color: colors.textDark }}
+                  >
+                    <WordByWord
+                      text="Your handwriting defines your clarity and confidence. Through structured mindful practice, we master grip, posture, and pen control—transforming untidy handwriting into clean, confident strokes."
+                      delay={70}
+                      style={{
+                        fontSize: "clamp(1.1rem, 1.5vw, 1.3rem)",
+                        lineHeight: "1.6",
+                        maxWidth: "700px"
+                      }}
+                    />
+                  </motion.div>
                 </motion.div>
 
                 {/* BUTTONS */}
@@ -190,6 +190,7 @@ const Home = () => {
                   custom={5}
                   className="hero-buttons mt-5"
                 >
+                  {/* Join a Class Button -> Scrolls to Contact */}
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
@@ -198,13 +199,17 @@ const Home = () => {
                       background: colors.gradient.primary,
                       color: '#fff',
                     }}
-                    onClick={() => navigate("/contact")}
+                    onClick={() => {
+                      const section = document.getElementById("contact");
+                      section?.scrollIntoView({ behavior: "smooth" });
+                    }}
                   >
                     <PenLine className="me-2" size={18} />
                     Join a Class
                     <ArrowRight className="ms-2" size={18} />
                   </motion.button>
 
+                  {/* View Schedule Button -> Scrolls to Classes */}
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
@@ -214,7 +219,10 @@ const Home = () => {
                       color: colors.primary,
                       background: 'transparent',
                     }}
-                    onClick={() => navigate("/classes")}
+                    onClick={() => {
+                      const section = document.getElementById("classes");
+                      section?.scrollIntoView({ behavior: "smooth" });
+                    }}
                   >
                     View Schedule
                   </motion.button>
@@ -256,10 +264,10 @@ const Home = () => {
         </div>
 
 
-<br />
-<br />
-<br />
-<br />
+        <br />
+        <br />
+        <br />
+        <br />
 
         <div className="container pb-5">
           <motion.div

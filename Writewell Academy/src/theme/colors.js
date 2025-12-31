@@ -4,6 +4,7 @@ const getThemeColors = (theme = 'dark') => {
     return {
       primary: '#818cf8', // Lighter indigo for dark mode
       whatsapp: "#156348",
+      highlight: '#ff4d4d',
       secondary: '#a78bfa', // Lighter purple
       accent: '#22d3ee', // Brighter cyan
       background: '#0f172a', // Dark slate
@@ -26,6 +27,7 @@ const getThemeColors = (theme = 'dark') => {
   return {
     primary: '#6366f1', // Modern indigo
     whatsapp:"#156348",
+    highlight: '#ff4d4d', // Bright blue
     secondary: '#8b5cf6', // Purple
     accent: '#06b6d4', // Cyan
     background: '#f8fafc', // Soft gray background

@@ -10,7 +10,7 @@ const Header = () => {
 
     return (
         <nav
-            className="navbar navbar-expand-sm header-nav sticky-top"
+            className="navbar navbar-expand-sm header-nav "
             data-theme={theme}
             style={{
                 backgroundColor: colors.background,
@@ -18,7 +18,7 @@ const Header = () => {
             }}
         >
             <div className="container-fluid">
-                {/* Logo / Brand */}
+                
                 <Link
                     to="home"
                     smooth

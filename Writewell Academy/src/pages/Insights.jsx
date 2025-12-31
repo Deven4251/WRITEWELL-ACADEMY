@@ -46,13 +46,10 @@ const tips = [
 const Insights = () => {
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
-
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [zoomImage, setZoomImage] = useState(null);
 
-  const goNext = () =>
-    setGalleryIndex((g) => (g + 1) % galleryItems.length);
-
+  const goNext = () => setGalleryIndex((g) => (g + 1) % galleryItems.length);
   const goPrev = () =>
     setGalleryIndex((g) => (g - 1 + galleryItems.length) % galleryItems.length);
 
@@ -67,172 +64,112 @@ const Insights = () => {
   }, []);
 
   return (
-    <main className="insights-main" data-theme={theme}>
-      {/* HERO */}
-      <section className="insights-hero">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center"
-          >
-            <h1 className="insights-title" style={{ color: colors.textDark }}>
-              Insights
-            </h1>
-            <p
-              className="insights-subtitle"
-              style={{ color: colors.textMuted }}
+    <section id="insights" className="insights-section py-5" data-theme={theme}>
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-5"
+        >
+          <h1 className="insights-title" style={{ color: colors.textDark }}>
+            Insights
+          </h1>
+          <p className="insights-subtitle" style={{ color: colors.textMuted }}>
+            Tips for Better Handwriting & Student Transformations
+          </p>
+        </motion.div>
+
+        {/* TIPS SECTION */}
+        <div className="row g-4 mb-5">
+          <div className="col-12">
+            <h2
+              className="section-heading h3"
+              style={{ color: colors.textDark }}
             >
-              Tips for Better Handwriting · Student Transformations
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* TIPS */}
-      <section className="tips-section" data-theme={theme}>
-        <div className="container">
-          <h2 className="section-heading" style={{ color: colors.textDark }}>
-            Handwriting Tips
-          </h2>
-
-          <div className="tips-list">
+              Handwriting Tips
+            </h2>
+          </div>
+          <div className="tips-grid">
             {tips.map((tip, i) => (
               <motion.div
                 key={i}
-                className="tip-item"
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="tip-item-card"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
                 style={{
+                  background: theme === "dark" ? "#ffffff05" : "#f8f9fa",
                   borderLeft: `4px solid ${colors.accent}`,
                 }}
               >
                 <Lightbulb
-                  size={22}
-                  style={{ color: colors.accent, flexShrink: 0 }}
+                  size={20}
+                  className="me-2"
+                  style={{ color: colors.accent }}
                 />
-                <p style={{ color: colors.textMuted }}>{tip}</p>
+                <p className="mb-0" style={{ color: colors.textMuted }}>
+                  {tip}
+                </p>
               </motion.div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* TRANSFORMATIONS */}
-      <section className="carousel-section" data-theme={theme}>
-        <div className="container">
-          <h2
-            className="section-heading text-center"
-            style={{ color: colors.textDark }}
-          >
-            Student Transformations
-          </h2>
-
-          <div className="carousel-static-header">
-            <h3 className="carousel-title" style={{ color: colors.textDark }}>
-              Before & After Results
-            </h3>
-            <p
-              className="carousel-description"
-              style={{ color: colors.textMuted }}
-            >
-              Real improvements achieved through structured practice and expert
-              guidance.
+        {/* TRANSFORMATIONS CAROUSEL */}
+        <div className="transformations-wrapper py-5">
+          <div className="text-center mb-4">
+            <h2 className="h3 fw-bold" style={{ color: colors.textDark }}>
+              Results
+            </h2>
+            <p style={{ color: colors.textMuted }}>
+              Real improvements achieved through expert guidance.
             </p>
           </div>
-
-          <div className="minimal-carousel">
+          <div className="minimal-carousel position-relative px-md-5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={galleryIndex}
-                className="carousel-slide"
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -40 }}
-                transition={{ duration: 0.45 }}
+                className="image-pair-grid"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="image-pair">
-                  <div className="image-container">
-                    <p
-                      className="image-label"
-                      style={{ color: colors.textMuted }}
-                    >
-                      Before
-                    </p>
-                    <motion.img
-                      src={galleryItems[galleryIndex].before}
-                      alt="Before handwriting"
-                      className="transformation-image"
-                      onClick={() =>
-                        setZoomImage(galleryItems[galleryIndex].before)
-                      }
-                      whileHover={{ scale: 1.04 }}
-                    />
-                  </div>
+                <div className="image-box">
 
-                  <div className="image-container">
-                    <p
-                      className="image-label"
-                      style={{ color: colors.textMuted }}
-                    >
-                      After
-                    </p>
-                    <motion.img
-                      src={galleryItems[galleryIndex].after}
-                      alt="After handwriting"
-                      className="transformation-image"
-                      onClick={() =>
-                        setZoomImage(galleryItems[galleryIndex].after)
-                      }
-                      whileHover={{ scale: 1.04 }}
-                    />
-                  </div>
+                  <img
+                    src={galleryItems[galleryIndex].before}
+                    onClick={() =>
+                      setZoomImage(galleryItems[galleryIndex].before)
+                    }
+                    alt="Before"
+                    className="img-fluid rounded-3"
+                  />
+                </div>
+                <div className="image-box">
+
+                  <img
+                    src={galleryItems[galleryIndex].after}
+                    onClick={() =>
+                      setZoomImage(galleryItems[galleryIndex].after)
+                    }
+                    alt="After"
+                    className="img-fluid rounded-3"
+                  />
                 </div>
               </motion.div>
             </AnimatePresence>
-
-            <button
-              className="carousel-nav carousel-nav-left"
-              onClick={goPrev}
-              aria-label="Previous"
-              style={{ color: colors.primary }}
-            >
-              <ChevronLeft size={26} />
+            <button className="nav-btn left" onClick={goPrev}>
+              <ChevronLeft />
             </button>
-
-            <button
-              className="carousel-nav carousel-nav-right"
-              onClick={goNext}
-              aria-label="Next"
-              style={{ color: colors.primary }}
-            >
-              <ChevronRight size={26} />
+            <button className="nav-btn right" onClick={goNext}>
+              <ChevronRight />
             </button>
-
-            <div className="carousel-dots">
-              {galleryItems.map((_, i) => (
-                <button
-                  key={i}
-                  className={`carousel-dot ${i === galleryIndex ? "active" : ""
-                    }`}
-                  onClick={() => setGalleryIndex(i)}
-                  style={{
-                    background:
-                      i === galleryIndex
-                        ? colors.primary
-                        : colors.border,
-                  }}
-                />
-              ))}
-            </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* ZOOM MODAL */}
       <AnimatePresence>
         {zoomImage && (
           <motion.div
@@ -241,30 +178,20 @@ const Insights = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setZoomImage(null)}
-            style={{
-              background:
-                theme === "dark"
-                  ? "rgba(0,0,0,0.9)"
-                  : "rgba(0,0,0,0.85)",
-            }}
           >
             <motion.img
               src={zoomImage}
-              className="zoom-image"
-              initial={{ scale: 0.85 }}
+              className="zoom-content"
+              initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.85 }}
             />
-            <button
-              className="zoom-close"
-              onClick={() => setZoomImage(null)}
-            >
-              <X size={34} />
+            <button className="zoom-close">
+              <X size={30} />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
-    </main>
+    </section>
   );
 };
 
