@@ -120,16 +120,15 @@ const Testimonials = () => {
                         <motion.h1
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="insights-title"
+                            className="insights-title text-center"
                             style={{ color: colors.textDark }}
                         >
-                            Community Voice
+                            Testimonials
                         </motion.h1>
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="insights-subtitle text-center" style={{ color: colors.textMuted }}>
                             What parents and students are saying about us.
                         </motion.p>
                     </header>
-
                     <motion.div
                         className="feedback-grid"
                         variants={containerVariants}
