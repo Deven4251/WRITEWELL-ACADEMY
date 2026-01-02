@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+
 import { motion } from "framer-motion";
 import { PenLine, Sparkles, Feather, Wand2, ArrowRight } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
