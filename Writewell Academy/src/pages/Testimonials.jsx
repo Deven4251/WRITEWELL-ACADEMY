@@ -150,10 +150,9 @@ const Testimonials = () => {
                                         exit={{ opacity: 0, scale: 0.8 }}
                                     >
                                         <div className="card-top">
-                                            <Avatar name={fb.name} size={48} />
                                             <div className="user-meta">
-                                                <span className="user-name">{fb.name}</span>
-                                                <span className="post-date">{date}</span>
+                                                <span className="user-name ">{fb.name}</span>
+                                                <span className="post-date ">{date}</span>
                                             </div>
                                             <Star className="quote-icon" size={20} fill="#FFD700" color="#FFD700" />
                                         </div>

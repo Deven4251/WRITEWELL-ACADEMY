@@ -139,11 +139,11 @@ const Classes = () => {
                     <Calendar size={24} />
                   </div>
                   <div className="flex-grow-1">
-                    <h4 className="mb-0 fw-bold text-dark animated-title">
+                    <h4 className="mb-0 fw-bold text-dark ">
                       Enrollment Schedule
                     </h4>
 
-                    <p className="small mb-0 opacity-75 text-uppercase tracking-wider fw-bold animated-para">Available Batches</p>
+                    <p className="small mb-0 opacity-75 text-uppercase tracking-wider fw-bold ">Available Batches</p>
                   </div>
                 </div>
 
