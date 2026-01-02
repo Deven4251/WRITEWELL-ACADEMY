@@ -17,3 +17,7 @@ section {
   overflow-y: scroll;
   height: 100vh;
 }
+
+.logo{
+  border-radius: 50px;
+}

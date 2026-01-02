@@ -138,9 +138,12 @@ const Classes = () => {
                   >
                     <Calendar size={24} />
                   </div>
-                  <div>
-                    <h4 className="mb-0 fw-bold">Enrollment Schedule</h4>
-                    <p className="small mb-0 opacity-75 text-uppercase tracking-wider">Available Batches</p>
+                  <div className="flex-grow-1">
+                    <h4 className="mb-0 fw-bold text-dark animated-title">
+                      Enrollment Schedule
+                    </h4>
+
+                    <p className="small mb-0 opacity-75 text-uppercase tracking-wider fw-bold animated-para">Available Batches</p>
                   </div>
                 </div>
 
@@ -157,7 +160,7 @@ const Classes = () => {
                     <tbody>
                       <tr className="align-middle">
                         <td className="ps-0 py-3 fw-semibold">Mon - Thu</td>
-                        <td className="py-3">4:30 PM - 5:30 PM</td>
+                        <td className="py-3">4:30 PM - 5:15 PM</td>
                         <td className="pe-0 py-3 text-end">
                           <div className="d-inline-flex align-items-center gap-2">
                             <span className="pulse-dot" style={{ width: '8px', height: '8px', background: '#4ade80', borderRadius: '50%' }}></span>
@@ -168,7 +171,7 @@ const Classes = () => {
                       </tr>
                       <tr className="align-middle">
                         <td className="ps-0 py-3 fw-semibold">Wed - Fri</td>
-                        <td className="py-3">5:00 PM - 6:00 PM</td>
+                        <td className="py-3">5:00 PM - 5:45 PM</td>
                         <td className="pe-0 py-3 text-end">
                           <div className="d-inline-flex align-items-center gap-2">
                             <span className="pulse-dot" style={{ width: '8px', height: '8px', background: '#4ade80', borderRadius: '50%' }}></span>

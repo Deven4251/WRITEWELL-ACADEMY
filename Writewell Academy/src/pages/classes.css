@@ -286,3 +286,69 @@
     font-size: 0.9rem;
   }
 }
+
+
+
+/* color overlap */
+.animated-title {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem; /* Added for visibility */
+
+  /* 1. Define the gradient */
+  background: linear-gradient(90deg,
+        #ffffff, #000000, #000000,
+        #fefbfb, #010101, #050505,
+        #fcfcfc);
+
+  /* 2. Stretch the background */
+  background-size: 200% auto;
+
+  /* 3. Clip to text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* 4. The Animation */
+  animation: waveLTR 3.5s linear infinite;
+}
+
+@keyframes waveLTR {
+  0% {
+    background-position: 200% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+.animated-para {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 1rem; /* Added for visibility */
+
+  /* 1. Define the gradient */
+  background: linear-gradient(90deg,
+        #f61919, #fff8f8, #ffffff,
+        #ff0000, #fffdfd, #fffefe,
+        #e60707);
+
+  /* 2. Stretch the background */
+  background-size: 200% auto;
+
+  /* 3. Clip to text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* 4. The Animation */
+  animation: waveLTR 3.5s linear infinite;
+}
+
+@keyframes waveLTR {
+  0% {
+    background-position: 200% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
