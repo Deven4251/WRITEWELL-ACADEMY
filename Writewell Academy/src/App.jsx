@@ -8,10 +8,6 @@ import Testimonials from "./pages/Testimonials"
 function App() {
   return (
     <div className="main-container">
-      {/* 1. Navbar stays at the top */}
-      {/* <Navbar /> */}
-
-      {/* 2. All pages are now sections on one page */}
       <section id="home">
         <Home />
       </section>

@@ -7,8 +7,8 @@ const Footer = () => {
     const colors = getThemeColors(theme);
 
     return (
-        <footer
-            className="footer-component py-4 mt-5"
+        <div
+            className="footer-component py-4"
             data-theme={theme}
             style={{
                 borderTop: `1px solid ${colors.border}`,
@@ -24,7 +24,7 @@ const Footer = () => {
                     color: colors.textDark,
                     fontSize: '1.1rem'
                 }}>
-                    © {new Date().getFullYear()} WRITEWELL ACADEMY
+                    © {new Date().getFullYear()} Handwriting Champions
                 </p>
 
                 <ul className="list-inline mb-0">
@@ -45,7 +45,7 @@ const Footer = () => {
                     </li>
                 </ul>
             </div>
-        </footer>
+        </div>
     );
 };
 

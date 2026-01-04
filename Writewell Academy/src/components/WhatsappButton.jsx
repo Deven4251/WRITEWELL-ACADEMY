@@ -6,7 +6,7 @@ import { getThemeColors } from "../theme/colors";
 import { useEffect, useState } from "react";
 
 const FloatingWhatsAppButton = ({
-    phone = "916386024257",
+    phone = "919980799621",
     message = "Hello handwriting-champions Team, I would like to schedule a free consultation for your handwriting classes program.",
 }) => {
     const { theme } = useTheme();
