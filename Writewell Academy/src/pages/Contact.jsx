@@ -8,6 +8,7 @@ import api from "../api/axios";
 import "./contact.css";
 import Footer from "../components/Footer";
 
+
 const Contact = () => {
     const { theme } = useTheme();
     const colors = getThemeColors(theme);
