@@ -32,11 +32,6 @@ const Classes = () => {
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
 
-  const batchTimings = [
-    { batch: "MONDAY THURSDAY", time: "4:30 PM - 5:15 PM" },
-    { batch: "WEDNESDAY FRIDAY", time: "5:00 PM - 5:45 PM" },
-  ];
-
   const features = [
     {
       title: "15+ Years Experience",

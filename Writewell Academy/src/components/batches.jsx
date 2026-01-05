@@ -18,12 +18,12 @@ const Batches = () => {
             rows: [
                 {
                     days: "Mon - Thu",
-                    time: "4:30 PM - 5:15 PM",
+                    time: "4:30 - 5:15 PM",
                     status: "Enrolling",
                 },
                 {
                     days: "Wed - Fri",
-                    time: "5:00 PM - 5:45 PM",
+                    time: "5:00 - 5:45 PM",
                     status: "Enrolling",
                 },
             ],
@@ -36,13 +36,13 @@ const Batches = () => {
             gradient: colors.gradient.secondary,
             rows: [
                 {
-                    days: "Mon - Wed - Fri",
-                    time: "7:00 PM - 7:45 PM",
+                    days: "TUESDAY",
+                    time: "5:00 - 5:45 PM",
                     status: "Enrolling",
                 },
                 {
-                    days: "Sat - Sun",
-                    time: "10:00 AM - 10:45 AM",
+                    days: "SATURDAY",
+                    time: "11:00 - 11:45 AM",
                     status: "Limited Seats",
                 },
             ],
